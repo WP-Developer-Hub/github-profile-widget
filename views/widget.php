@@ -20,17 +20,16 @@
  */
 ?>
 <?php echo $before_widget ?>
-<aside>
+<div>
 
 	<?php if ( isset( $config["title"] ) ) : ?>
 		<?php echo $before_title . $config["title"] . $after_title; ?>
 	<?php endif; ?>
-
-	<div class="github-widget<?php if ( $this->is_checked( $config, 'dark_theme' ) ) : ?> dark<?php endif; ?>" id="<?php echo $this->id; ?>">
+	<div class="github-widget<?php if ( $this->is_checked( $config, 'dark_theme' ) ) : ?> dark<?php endif; ?>" id="<?php echo $this->id . '_' . uniqid(); ?>">
 
 		<div class="github-widget-header">
-			<img class="github-widget-company-logo" title="GitHub"
-			     src="https://github.githubassets.com/favicon.ico"/>
+			<img loading="lazy" decoding="async"  class="github-widget-company-logo" title="GitHub"
+			     src="https://github.githubassets.com/favicon.ico" alt="GitHub logo"/>
 
 			<div class="github-widget-header-text">
 				<a class="github-widget-header-link" target="_blank"
@@ -43,10 +42,10 @@
 		<div class="github-widget-content">
 			<?php if ( $this->is_checked( $config, 'avatar_and_name' ) ) : ?>
 				<a target="_blank" href="<?php echo $profile->html_url; ?>" title="View profile">
-					<img class="github-profile-pic" src="<?php echo $profile->avatar_url; ?>"
-					     style="border-radius: 5px">
+					<img loading="lazy" decoding="async"  class="github-profile-pic" src="<?php echo $profile->avatar_url; ?>"
+					     style="border-radius: 5px" alt="<?php echo $profile->name; ?> avatar">
                 <span class="github-names">
-                    <p class="github-name"><?php echo $profile->name; ?></p>
+                    <span class="github-name"><?php echo $profile->name; ?></span>
                     <span class="github-username"><?php echo $profile->login; ?></span>
                 </span>
 				</a>
@@ -105,8 +104,9 @@
 						</a>
 
 						<?php if ( $config['repositories'] == 'on' ): ?>
-							<input type="checkbox" id="gh-repo-t" class="github-repos-toggle">
-							<label for="gh-repo-t" class="github-repos-toggle-la octicon octicon-chevron-down"></label>
+							<?php $cid = $this->id . '_' . uniqid(); ?>
+							<input type="checkbox" id="gh-repo-t-<?php echo $cid; ?>" class="github-repos-toggle">
+							<label for="gh-repo-t-<?php echo $cid; ?>" class="github-repos-toggle-la octicon octicon-chevron-down"></label>
 
 							<div class="github-repos">
 								<?php foreach ( $repositories as $repo ) { ?>
@@ -133,8 +133,8 @@
 				<div class="github-block github-organizations">
 					<?php foreach ( $organizations as $org ) { ?>
 						<a target="_blank" href="https://github.com/<?php echo $org->login; ?>"
-						   title="<?php echo $org->login; ?>&#013;<?php echo $org->description; ?>">
-							<img src='<?php echo $org->avatar_url; ?>' class="github-avatarurl"/>
+						   title="<?php echo $org->login; ?> & <?php echo $org->description; ?>">
+							<img loading="lazy" decoding="async"  src='<?php echo $org->avatar_url; ?>' class="github-avatarurl" alt="<?php echo $org->login; ?> avatar"/>
 						</a>
 					<?php } ?>
 				</div>
@@ -156,5 +156,5 @@
 
 		</div>
 	</div>
-</aside>
+</div>
 <?php echo $after_widget ?>
