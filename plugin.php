@@ -8,142 +8,202 @@
  * Author URI: https://github.com/refactors
  * License: GPL2 or later
  */
-// prevent direct file access
+// Prevent direct file access
 if ( ! defined( 'ABSPATH' ) ) {
-	exit;
+    exit;
 }
 
 require_once( 'lib/htmlcompressor.php' );
+require_once( 'views/token-settings.php' );
 
 class GitHub_Profile extends WP_Widget {
 
-	const API_PATH = "https://api.github.com";
-	const API_VERSION = "v3";
+    const API_PATH = "https://api.github.com";
+    const API_VERSION = "2022-11-28";
 
-	protected $widget_slug = 'github-profile';
-	protected $checkboxes = array(
-		"avatar_and_name",
-		"meta_info",
-		"followers_and_following",
-		"repositories",
-		/*"gists", */
-		"organizations",
-		/*"feed", */
-		"dark_theme"
-	);
+    protected $widget_slug = 'github-profile';
+    protected $checkboxes = array(
+        "avatar_and_name",
+        "meta_info",
+        "followers_and_following",
+        "repositories",
+        "organizations",
+        "dark_theme"
+    );
 
-	public function __construct() {
-		parent::__construct(
-			$this->widget_slug, 'GitHub Profile', $this->widget_slug, array(
-				'classname'   => $this->widget_slug . '-class',
-				'description' => 'A widget to show a small version of your GitHub profile',
-				$this->widget_slug
-			)
-		);
-		add_action( 'admin_enqueue_scripts', array( $this, 'register_admin_scripts' ) );
-		add_action( 'wp_enqueue_scripts', array( $this, 'register_widget_styles' ) );
-	}
+    public function __construct() {
+        parent::__construct(
+            $this->widget_slug, 'GitHub Profile', $this->widget_slug, array(
+                'classname'   => $this->widget_slug . '-class',
+                'description' => 'A widget to show a small version of your GitHub profile',
+                $this->widget_slug
+            )
+        );
+        add_action( 'admin_enqueue_scripts', array( $this, 'register_admin_scripts' ) );
+        add_action( 'wp_enqueue_scripts', array( $this, 'register_widget_styles' ) );
+    }
 
-	public function form( $config ) {
-		$default = array(
-			"avatar_and_name"     => "on",
-			"meta_info"           => "on",
-			"followers_following" => "on",
-			"organizations"       => "on",
-			"cache"               => "50",
-			"dark_theme"         => "off"
-		);
+    public function form( $config ) {
+        $default = array(
+            "avatar_and_name"     => "on",
+            "meta_info"           => "on",
+            "followers_following" => "on",
+            "organizations"       => "on",
+            "cache"               => "50",
+            "dark_theme"          => "off"
+        );
 
-		$config = ! isset( $config['first_time'] ) ? $default : $config;
+        $config = ! isset( $config['first_time'] ) ? $default : $config;
 
-		foreach ( $config as $key => $value ) {
-			${$key} = esc_attr( $value );
-		}
+        foreach ( $config as $key => $value ) {
+            ${$key} = esc_attr( $value );
+        }
 
-		ob_start( "refactors_HTMLCompressor" );
-		require 'views/options.php';
-		ob_end_flush();
-	}
+        ob_start( "refactors_HTMLCompressor" );
+        require 'views/options.php';
+        ob_end_flush();
+    }
 
-	public function update( $new_instance, $old_instance ) {
-		$new_instance['first_time'] = false;
+    public function update( $new_instance, $old_instance ) {
+        $new_instance['first_time'] = false;
+        return $new_instance;
+    }
 
-		return $new_instance;
-	}
+    public function widget( $args, $config ) {
+        if (empty(get_option('github_token'))) {
+            return;
+        }
 
-	public function widget( $args, $config ) {
-		if ( empty( $config['username'] ) ) {
-			return;
-		}
+        $profile = $this->get_github_api_content( '', $config );
 
-		$url     = self::API_PATH . '/users/' . $config['username'];
-		$profile = $this->get_github_api_content( $url, $config );
-		$profile->created_at = new DateTime( $profile->created_at );
-		$profile->events_url = str_replace( '{/privacy}', '', $profile->events_url );
+        if ( ! $profile ) {
+            return;
+        }
 
-		$optionsToUrls = array(
-			'repositories'  => 'repos',
-			'organizations' => 'organizations',
-			'feed'          => 'events'
-		);
+        $profile->created_at = new DateTime( $profile->created_at );
+        $profile->events_url = str_replace( '{/privacy}', '', $profile->events_url );
 
-		foreach ( $optionsToUrls as $option => $url ) {
-			if ( $this->is_checked( $config, $option ) ) {
-				${$option} = $this->get_github_api_content( $profile->{$url . '_url'}, $config );
-			}
-		}
+        $optionsToUrls = array(
+            'repositories' => $profile->{'repos_url'},
+            'organizations' => empty($username) ? 'orgs' : $profile->{'organizations_url'},
+            'feed' => $profile->{'events_url'}
+        );
 
-		extract( $args, EXTR_SKIP );
-		ob_start( "refactors_HTMLCompressor" );
-		$this->load_theme($config);
-		require 'views/widget.php';
-		ob_end_flush();
-	}
+        foreach ( $optionsToUrls as $option => $url ) {
+            if ( $this->is_checked( $config, $option ) ) {
+                if (! empty( $url ) ) {
+                	${$option} = $this->get_github_api_content( $url, $config );
+                }
+            }
+        }
 
-	private function get_github_api_content( $apiPath, $config ) {
-		$file         = get_option( $apiPath ); // $apiPath is auto sanitized
-		$timestamp    = get_option( $apiPath . 'time' );
-		$fileCacheAge = time() - $timestamp + rand( - 4, 4 ); // 9 random results prevents simultaneous expiring
+        extract( $args, EXTR_SKIP );
+        ob_start( "refactors_HTMLCompressor" );
+        $this->load_theme();
+        require 'views/widget.php';
+        ob_end_flush();
+    }
 
-		if ( ! $file || ! $timestamp || $fileCacheAge > $config['cache'] * 60 ) {
-			$context = stream_context_create( array(
-				'http' => array(
-					'method' => "GET",
-					'header' =>
-						"Accept: application/vnd.github." . self::API_VERSION . "+json\r\n" .
-						"User-Agent: {$config['username']}\r\n" .
-						( empty( $config['token'] ) ? '' : "Authorization: token {$config['token']}\r\n" )
-				)
-			) );
-			$file    = file_get_contents( $apiPath, false, $context );
-			if ( ! $file ) {
-				echo 'Error with API; please provide '
-				     . ( empty ( $config['token'] ) ? 'a token or increase cache time.' : 'a new token.' );
+    private function get_github_api_content($apiPath, $config) {
+        $username = sanitize_text_field($config['username']); // Sanitize the username input
 
-				return "";
-			}
-			update_option( $apiPath, $file );
-			update_option( $apiPath . 'time', time() );
-		}
+        // Derive API paths based on the username and apiPath
+        if (empty($apiPath)) {
+            if (!empty($username)) {
+                $userApiPath = self::API_PATH . '/users/' . $username;
+                $orgApiPath = self::API_PATH . '/orgs/' . $username;
+            } else {
+                $userApiPath = self::API_PATH . '/user';
+                $orgApiPath = ''; // No organization path for authenticated user
+            }
+        } else {
+            if (!empty($username)) {
+                $userApiPath = self::API_PATH . '/users/' . $username . '/' . $apiPath;
+                $orgApiPath = ''; // No organization lookup for sub-paths
+            } else {
+                $userApiPath = self::API_PATH . '/user/' . $apiPath;
+                $orgApiPath = ''; // No organization path for sub-paths
+            }
+        }
 
-		return json_decode( $file );
-	}
+        // Prepare headers for the request
+        $headers = [
+            'Accept' => 'application/vnd.github+json',
+            'Authorization' => 'Bearer ' . get_option('github_token'),
+            'X-GitHub-Api-Version' => self::API_VERSION,
+        ];
 
-	public function is_checked( $conf, $name ) {
-		return isset( $conf[ $name ] ) && $conf[ $name ] == 'on';
-	}
+        // Make the request using wp_remote_get
+        $response = $this->make_github_request($userApiPath, $headers);
 
-	public function register_widget_styles() {
-		wp_enqueue_style( $this->widget_slug . '-octicons', plugins_url( 'css/octicons/octicons.css', __FILE__ ) );
-	}
+        // Check HTTP status and handle fallback to organization if needed
+        if ($response['httpCode'] === 404 && !empty($orgApiPath)) {
+            $response = $this->make_github_request($orgApiPath, $headers);
 
-	public function register_admin_scripts() {
-		wp_enqueue_script( $this->widget_slug . '-admin-script', plugins_url( 'js/admin.js', __FILE__ ), array( 'jquery' ) );
-	}
+            if ($response['httpCode'] === 404) {
+                error_log("GitHub API: User or organization '$username' not found.");
+                return 'User or organization not found. Please check the username.';
+            }
+        }
 
-	public function load_theme($config) {
-		wp_enqueue_style( $this->widget_slug . '-widget-styles', plugins_url( "css/widget.css", __FILE__ ) );
-	}
+        // Handle other HTTP errors
+        if ($response['httpCode'] !== 200) {
+            error_log("GitHub API Error: HTTP {$response['httpCode']}. Response: {$response['body']}");
+            return "An error occurred while fetching the GitHub data. Please try again later.";
+        }
+
+        // Decode and return the response for successful requests
+        return json_decode($response['body']);
+    }
+
+    // Helper function for making the GitHub request using wp_remote_get
+    private function make_github_request($url, $headers) {
+        if (empty($url)) {
+            return ['httpCode' => 404, 'body' => ''];
+        }
+
+        // Using wp_remote_get to send the request
+        $response = wp_remote_get($url, [
+            'headers' => $headers,
+            'timeout' => 15, // Optional timeout setting
+        ]);
+
+        // Check for errors
+        if (is_wp_error($response)) {
+            return [
+                'httpCode' => 500,
+                'body' => $response->get_error_message(),
+            ];
+        }
+
+        // Get the HTTP status code and body from the response
+        $httpCode = wp_remote_retrieve_response_code($response);
+        $body = wp_remote_retrieve_body($response);
+
+        return [
+            'httpCode' => $httpCode,
+            'body' => $body,
+        ];
+    }
+
+    public function is_checked( $conf, $name ) {
+        return isset( $conf[ $name ] ) && $conf[ $name ] == 'on';
+    }
+
+    public function register_widget_styles() {
+        wp_enqueue_style( $this->widget_slug . '-octicons', plugins_url( 'css/octicons/octicons.css', __FILE__ ) );
+    }
+
+    public function register_admin_scripts() {
+        wp_enqueue_script( $this->widget_slug . '-admin-script', plugins_url( 'js/admin.js', __FILE__ ), array( 'jquery' ) );
+    }
+
+    public function load_theme() {
+        wp_enqueue_style( $this->widget_slug . '-widget-styles', plugins_url( "css/widget.css", __FILE__ ) );
+    }
 }
 
-add_action( 'widgets_init', create_function( '', 'return register_widget("GitHub_Profile");' ) );
+add_action( 'widgets_init', function() {
+    register_widget( 'GitHub_Profile' );
+} );
+

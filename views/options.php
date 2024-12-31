@@ -37,11 +37,7 @@
 <?php endforeach; ?>
 </p>
 
-<a class="github-advanced-title" href="javascript:void(0)" style="margin-bottom: 8px; display: block;">
-	Advanced
-</a>
-
-<div class="github-advanced" style="display: none;">
+<div class="github-advanced">
 	<p style="margin-top: 0">
 		<label for="<?php echo $this->get_field_id( 'cache' ); ?>"/>
 		<input class="widefat" title="Value 0 disables cache"
@@ -50,19 +46,5 @@
 		       type="number" style="width: 50px;"
 		       placeholder="Cache expiration time in minutes"
 		       value="<?php echo $cache ?>"/> minutes of cache
-	</p>
-	<small>Widget may hit API limit if cache is less than 5 min, unless a token is provided.</small>
-
-	<p>
-		<label for="<?php echo $this->get_field_id( 'token' ); ?>"/>
-		<input class="widefat"
-		       id="<?php echo $this->get_field_id( 'token' ); ?>"
-		       name="<?php echo $this->get_field_name( 'token' ); ?>"
-		       type="text" style="width: 75%"
-		       placeholder="oAuth token" max=""
-		       value="<?php echo $token ?>"/>
-		<a href="https://github.com/settings/tokens/new" target="_blank" style="margin-left: 4px;">
-			<small>Create token</small>
-		</a>
 	</p>
 </div>
