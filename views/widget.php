@@ -42,8 +42,7 @@
 		<div class="github-widget-content">
 			<?php if ( $this->is_checked( $config, 'avatar_and_name' ) ) : ?>
 				<a target="_blank" href="<?php echo $profile->html_url; ?>" title="View profile">
-					<img loading="lazy" decoding="async"  class="github-profile-pic" src="<?php echo $profile->avatar_url; ?>"
-					     style="border-radius: 5px" alt="<?php echo $profile->name; ?> avatar">
+            <img class="github-profile-pic" src="<?php echo $profile->avatar_url; ?>" alt="<?php echo $profile->name; ?> avatar">
                 <span class="github-names">
                     <span class="github-name"><?php echo $profile->name; ?></span>
                     <span class="github-username"><?php echo $profile->login; ?></span>
