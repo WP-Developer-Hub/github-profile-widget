@@ -80,12 +80,12 @@
 			<?php if ( $this->is_checked( $config, 'followers_and_following' ) ): ?>
 				<div class="github-block github-vcard-stats">
 					<a class="github-vcard-stat" target='_blank'
-					   href="<?php echo $profile->html_url; ?>/followers">
+					   href="<?php echo $profile->html_url; ?>/?tab=followers">
 						<strong class="github-vcard-stat-count"><?php echo $profile->followers; ?></strong>
 						<span class="text-muted">Followers</span>
 					</a>
 					<a class="github-vcard-stat" target='_blank'
-					   href="<?php echo $profile->html_url; ?>/following">
+					   href="<?php echo $profile->html_url; ?>/?tab=following">
 						<strong class="github-vcard-stat-count"><?php echo $profile->following; ?></strong>
 						<span class="text-muted">Following</span>
 					</a>
@@ -98,7 +98,7 @@
 				<div class="github-block with-icons">
 					<div>
 						<span class="octicon octicon-repo"></span>
-						<a href="<?php echo $profile->html_url; ?>/repositories" target="_blank">
+						<a href="<?php echo $profile->html_url; ?>/?tab=repositories" target="_blank">
 							<?php echo $profile->public_repos; ?> Public Repositories
 						</a>
 
