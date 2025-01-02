@@ -5,7 +5,7 @@
  * Description: This is a plugin that shows your GitHub profile with a simple widget.
  * Version: 3.1.0
  * Author: Henrique Dias and Luís Soares (Refactors) and DJABHipHop
- * Author URI: https://github.com/refactors
+ * Author URI: https://github.com/WP-Developer-Hub
  * Requires PHP: 7.2
  * Requires at least: 6.0
  * License: GPL2 or later
