@@ -184,7 +184,7 @@ class GitHub_Profile extends WP_Widget {
     }
 
     public function register_widget_styles() {
-        wp_enqueue_style( $this->widget_slug . '-octicons', plugins_url( 'css/octicons/octicons.css', __FILE__ ) );
+        wp_enqueue_style( $this->widget_slug . '-octicons', plugins_url( 'css/octicons/octicons.min.css', __FILE__ ) );
     }
 
     public function load_theme() {
