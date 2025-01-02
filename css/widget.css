@@ -1,241 +1,209 @@
-.github-widget {
+:root {
+    /* GitHub Light Mode Colors */
+    --github-pw-bg-color: #ffffff; /* Light background */
+    --github-pw-border-color: #e1e4e8; /* Light border */
+    --github-pw-text-color: #24292f; /* Dark text */
+    --github-pw-second-text-color: #9198a1; /* Light text */
+    --github-pw-header-bg-color: #f6f8fa; /* Light header */
+    --github-pw-header-text-color: var(--github-pw-text-color); /* Dark header text */
+    --github-pw-link-color: var(--github-pw-text-color); /* Lighter link color */
+    --github-pw-link-hover-color: #4493f8; /* Hover effect link color */
+    --github-pw-divider-color: #d1d5da; /* Divider color (light) */
+    --github-pw-octicon-color: var(--github-pw-text-color); /* Octicon color */
+}
+
+.github-pw-dark {
+    /* GitHub Dark Mode Colors */
+    --github-pw-bg-color: #0d1117; /* Dark background */
+    --github-pw-border-color: #30363d; /* Dark border */
+    --github-pw-text-color: #f0f6fc; /* Light text */
+    --github-pw-second-text-color: #9198a1; /* Light text */
+    --github-pw-header-bg-color: #161b22; /* Dark header */
+    --github-pw-header-text-color: #fff; /* Light header text */
+    --github-pw-link-color: var(--github-pw-text-color); /* Lighter shade of text color in dark mode */
+    --github-pw-divider-color: #30363d; /* Divider color (dark) */
+    --github-pw-octicon-color: var(--github-pw-text-color); /* Octicon color */
+}
+
+/* Common Rules */
+.github-pw-divider {
+    height: 1px;
+    display: block;
+    background: var(--github-pw-divider-color); /* Use divider color from border */
+}
+
+.github-pw-block {
+    margin: 20px;
+    display: block;
+    font-size: 14px;
+}
+
+.github-pw-icons-block {
+    gap: 5px;
+    display: flex;
+    align-items: center;
+}
+
+.github-pw-icons-block .octicon {
+    color: var(--github-pw-text-color);
+    transition: all 250ms linear 0s;
+}
+
+.github-pw-icons-block a:hover .octicon {
+    color: var(--github-pw-link-hover-color);
+}
+
+.github-pw *,
+.github-pw *::after.
+.github-pw *::before {
     box-sizing: border-box;
-    font: 13px/1.4 Helvetica, arial, nimbussansl, liberationsans, freesans, clean, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol";
-    background-color: #fff;
-    border: 1px solid #d8d8d8 !important;
-    color: #333;
-    padding: 10px;
 }
 
-.github-widget.dark {
-    background-color: #111;
-    border: 1px solid #999999 !important;
-    color: #eee;
+/* Widget Rules */
+.github-pw {
+    font-size: 13px;
+    background-color: var(--github-pw-bg-color);
+    border: 1px solid var(--github-pw-border-color);
+    color: var(--github-pw-text-color);
+    max-width: 100%;
+    width: 100%;
+    display: block;
+    overflow: hidden;
+    margin: 0;
+    padding: 0;
+    container: github-pw / inline-size;
+
 }
 
-.github-widget a {
-    outline: 0;
+/* Hover effect for links Rules */
+.github-pw a {
+    outline: 0 !important;
+    text-decoration: none !important;
+    transition: all 250ms linear 0s;
+    color: var(--github-pw-second-text-color);
 }
 
-.github-widget h2 {
+.github-pw a:hover,
+.github-pw a:hover .octicon {
+    color: var(--github-pw-link-hover-color);
+}
+
+/* Header Rules */
+.github-pw h2 {
     font-size: 1em;
     font-weight: bold;
     margin: 1em 0 .1em;
     padding: 0;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.05)
+    border-bottom: 1px solid var(--github-pw-divider-color);
 }
 
-.github-widget-content {
-    padding: .323em;
-}
-
-.github-shadowed {
-    padding: 0.313em;
-    background: rgba(0, 0, 0, 0.03)
-}
-
-
-/* HEADER */
-
-.github-widget-header {
+.github-pw-header {
     font-weight: bold;
-    background-color: #f5f5f5;
-    border-bottom: 1px solid #d8d8d8;
-    padding: 5px;
+    background-color: var(--github-pw-header-bg-color);
+    border-bottom: 1px solid var(--github-pw-border-color);
+    padding: 10px;
     margin: 0;
-    margin-bottom: 6px;
 }
 
-.dark .github-widget-header {
-    background-color: #111;
-    border-bottom: 1px solid #111;
-}
-
-.github-widget-company-logo {
+.github-pw-company-logo {
     display: inline-block;
     vertical-align: middle;
-    height: 1.5em;
+    height: 2.5em;
     margin-right: .250em;
     right: 0;
 }
 
-.github-widget-company-logo,
-.github-widget-header-text {
-    vertical-align: middle;
-}
-
-.github-widget-header-text,
-.github-widget-header-link {
+.github-pw-header-link {
     font-weight: bold;
     display: inline-block;
     vertical-align: middle;
+    font-size: 1.2em;
     line-height: 1.5em;
-    color: rgb(57, 66, 78) !important;
+    color: var(--github-pw-header-text-color);
 }
 
-.dark .github-widget-header-text,
-.dark .github-widget-header-link {
-    color: rgb(255, 255, 255) !important;
+/* Proifile Rules */
+.github-pw-profile {
+    display: flex;
+    align-items: flex-start;
 }
 
-.github-widget-header .separator {
-    margin: 0 .250em;
-}
-
-
-/* PROFILE */
-
-.github-profile-pic {
-    width: 25%;
-    display: inline-block;
-}
-
-.github-names {
-    display: inline-block;
-    vertical-align: top;
-    margin-left: 3px;
-}
-
-.github-name,
-.github-username {
+.github-pw-profile-avatar {
+    width: 128px;
     display: block;
+    vertical-align: bottom;
 }
 
-.github-name {
-    color: #444;
+.github-pw-profile-names {
+    gap: 1px;
+    top: -8px;
+    display: flex;
+    margin-left: 5px;
+    position: relative;
+    flex-direction: column;
+}
+
+.github-pw-profile-name {
     font-size: 1.15em;
-    margin: 0 0 0.1em !important;
     font-weight: bold;
 }
 
-.github-username {
+.github-pw-profile-username {
     font-size: 1.15em;
     font-weight: 300;
-    margin: 0.1em 0 !important;
-    color: #666;
+    color: var(--github-pw-second-text-color);
 }
 
-.dark .github-name,
-.dark .github-username {
-    color: #eee;
+.github-pw-vcard-stats {
+    gap: 5px;
+    display: flex;
+    align-items: center;
+    flex-direction: row;
 }
 
-.github-block:first-of-type {
-    border-top: 0;
-}
-
-.github-block:first-child {
-    padding: 0 0 8px 24px;
-}
-
-.github-block {
-    display: block;
-    padding: 10px 0 8px;
+.github-pw-vcard-stat {
+    gap: 5px;
+    display: flex;
     font-size: 14px;
-    border-top: 1px solid #eee;
+    align-items: center;
+    flex-direction: row;
+    justify-content: center;
+    text-transform: capitalize;
 }
 
-.dark .github-block {
-    border-top-color: #999;
-}
-
-.github-block.with-icons {
-    padding-left: 24px;
-}
-
-.github-block div {
-    margin: .2em 0;
-}
-
-.github-block a {
-    color: #4078c0;
-    text-decoration: none;
-}
-
-.github-block .octicon {
-    float: left;
-    width: 16px;
-    margin-left: -24px;
-    color: #ccc;
-    text-align: center;
-}
-
-.dark .github-block .octicon,
-.dark .github-block a {
-    color: #eee;
-}
-
-.github-repo-name {
-    font-size: 80%;
-}
-
-.github-repos-toggle {
-    display: none;
-}
-
-.github-repos-toggle-la {
-    float: none !important;
-    margin: 0 !important;
-    cursor: pointer;
-}
-
-.github-repos-toggle:checked~.github-repos {
-    max-height: 150px;
-}
-
-.github-repos {
-    max-height: 0px;
-    overflow-x: hidden;
-    overflow-y: hidden;
-    -webkit-transition: all ease-in-out .2s;
-    -moz-transition: all ease-in-out .2s;
-    -ms-transition: all ease-in-out .2s;
-    -o-transition: all ease-in-out .2s;
-    transition: all ease-in-out .2s;
-}
-
-.github-repos:hover {
-    overflow-y: auto;
-}
-
-.github-avatarurl {
-    max-width: 36px;
-    margin-right: 7px;
-}
-
-.github-vcard-stats {
-    text-align: center;
-}
-
-.github-vcard-stat-count {
+.github-pw-vcard-stat-count {
     display: block;
-    font-size: 28px;
+    font-size: 20px;
     font-weight: bold;
     line-height: 1;
 }
 
-.github-vcard-stat {
-    display: inline-block;
-    width: 45%;
-    font-size: 11px;
-    text-transform: capitalize;
+.github-pw-orgs {
+    background-color: var(--github-pw-header-bg-color); /* Light or dark background depending on mode */
+    border-top: 1px solid var(--github-pw-border-color); /* Divider color */
+    padding: 10px; /* Padding around content */
+    margin: 0;
+    display: flex;
+    gap: 10px; /* Spacing between organization items */
+    flex-wrap: wrap; /* Allow items to wrap when screen space is small */
 }
 
-.github-feed-entries {
-    max-height: 16em;
-    overflow: hidden;
+.github-pw-orgs .github-pw-org-avatar {
+    max-width: 40px;
+    border: 1px solid var(--github-pw-border-color);
 }
 
-.github-feed-entries:hover {
-    overflow-y: auto;
+.github-pw-orgs a:hover .github-pw-org-avatar {
+    border-color: var(--github-pw-link-hover-color); /* Hover effect on icon background */
 }
 
-.github-feed-entry {
-    font-size: 90%;
-    margin-bottom: 0.1em;
-}
+@container github-pw (max-width: 700px) {
+    .github-pw-block,
+    .github-pw-header {
+        margin: 10px;
+    }
 
-.github-organizations a {
-    display: inline-block;
-    margin-right: 0.1em;
+    .github-pw-profile-avatar {
+        width: 64px;
+    }
 }

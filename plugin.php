@@ -4,10 +4,16 @@
  * Plugin Name: GitHub Profile Widget
  * Description: This is a plugin that shows your GitHub profile with a simple widget.
  * Version: 2.0.0
- * Author: Henrique Dias and Luís Soares (Refactors)
+ * Author: Henrique Dias and Luís Soares (Refactors) and DJABHipHop
  * Author URI: https://github.com/refactors
+ * Requires PHP: 7.2
+ * Requires at least: 6.0
  * License: GPL2 or later
+ * License URI: https://www.gnu.org/licenses/gpl-2.0.html
+ * Text Domain: github_profile_widget
+ * Domain Path: /languages
  */
+
 // Prevent direct file access
 if ( ! defined( 'ABSPATH' ) ) {
     exit;
@@ -23,18 +29,18 @@ class GitHub_Profile extends WP_Widget {
 
     protected $widget_slug = 'github-profile';
     protected $checkboxes = array(
-        "avatar_and_name",
-        "meta_info",
-        "followers_and_following",
-        "repositories",
-        "organizations",
-        "dark_theme"
+        "github_wp_toggle_header",
+        "github_wp_toggle_avatar_and_name",
+        "github_wp_toggle_meta_info",
+        "github_wp_toggle_followers_and_following",
+        "github_wp_toggle_organizations",
+        "github_wp_toggle_dark_theme"
     );
 
     public function __construct() {
         parent::__construct(
             $this->widget_slug, 'GitHub Profile', $this->widget_slug, array(
-                'classname'   => $this->widget_slug . '-class',
+                'classname' => $this->widget_slug . '-class',
                 'description' => 'A widget to show a small version of your GitHub profile',
                 $this->widget_slug
             )
@@ -44,24 +50,32 @@ class GitHub_Profile extends WP_Widget {
     }
 
     public function form( $config ) {
-        $default = array(
-            "avatar_and_name"     => "on",
-            "meta_info"           => "on",
-            "followers_following" => "on",
-            "organizations"       => "on",
-            "cache"               => "50",
-            "dark_theme"          => "off"
-        );
+        if (empty(get_option('github_pw_api_token'))) {
+            echo '<p>' . sprintf(__('Go to Settings to configure the GitHub API token. %s', 'github_profile_widget'), '<a href="admin.php?page=github-wp-api-settings">' . __('Go to Settings', 'github_profile_widget') . '</a>') . '</p>';
+        } else {
 
-        $config = ! isset( $config['first_time'] ) ? $default : $config;
+            $default = array(
+                "github_wp_toggle_org" => "none",
+                "github_wp_toggle_avatar_and_name" => "on",
+                "github_wp_toggle_followers_following" => "on",
+                "github_wp_toggle_meta_info" => "on",
+                "github_wp_toggle_organizations" => "on",
+                "github_wp_toggle_cache" => "50",
+                "github_wp_toggle_dark_theme" => "off"
+            );
 
-        foreach ( $config as $key => $value ) {
-            ${$key} = esc_attr( $value );
+            $config = ! isset( $config['first_time'] ) ? $default : $config;
+
+            foreach ( $config as $key => $value ) {
+                ${$key} = esc_attr( $value );
+            }
+
+            $orgs = $this->get_github_api_content( "orgs", $config );
+
+            ob_start( "refactors_HTMLCompressor" );
+            require 'views/options.php';
+            ob_end_flush();
         }
-
-        ob_start( "refactors_HTMLCompressor" );
-        require 'views/options.php';
-        ob_end_flush();
     }
 
     public function update( $new_instance, $old_instance ) {
@@ -70,7 +84,7 @@ class GitHub_Profile extends WP_Widget {
     }
 
     public function widget( $args, $config ) {
-        if (empty(get_option('github_token'))) {
+        if (empty(get_option('github_pw_api_token'))) {
             return;
         }
 
@@ -83,17 +97,9 @@ class GitHub_Profile extends WP_Widget {
         $profile->created_at = new DateTime( $profile->created_at );
         $profile->events_url = str_replace( '{/privacy}', '', $profile->events_url );
 
-        $optionsToUrls = array(
-            'repositories' => $profile->{'repos_url'},
-            'organizations' => empty($username) ? 'orgs' : $profile->{'organizations_url'},
-            'feed' => $profile->{'events_url'}
-        );
-
-        foreach ( $optionsToUrls as $option => $url ) {
-            if ( $this->is_checked( $config, $option ) ) {
-                if (! empty( $url ) ) {
-                	${$option} = $this->get_github_api_content( $url, $config );
-                }
+        if ( $this->is_checked( $config, 'github_wp_toggle_organizations' ) ) {
+            if ( $profile->type == 'User' ) {
+                $orgs = $this->get_github_api_content( "orgs", $config );
             }
         }
 
@@ -105,58 +111,45 @@ class GitHub_Profile extends WP_Widget {
     }
 
     private function get_github_api_content($apiPath, $config) {
-        $username = sanitize_text_field($config['username']); // Sanitize the username input
+        $github_wp_org = sanitize_text_field($config['github_wp_org']);
 
-        // Derive API paths based on the username and apiPath
+        // Derive API paths based on whether org is provided or not
         if (empty($apiPath)) {
-            if (!empty($username)) {
-                $userApiPath = self::API_PATH . '/users/' . $username;
-                $orgApiPath = self::API_PATH . '/orgs/' . $username;
+            // If no sub-path is given, use org or user
+            if (empty($github_wp_org) || $github_wp_org === 'none') {
+                $apiPath = self::API_PATH . '/user';
             } else {
-                $userApiPath = self::API_PATH . '/user';
-                $orgApiPath = ''; // No organization path for authenticated user
+                $apiPath = self::API_PATH . '/orgs/' . $github_wp_org;
             }
         } else {
-            if (!empty($username)) {
-                $userApiPath = self::API_PATH . '/users/' . $username . '/' . $apiPath;
-                $orgApiPath = ''; // No organization lookup for sub-paths
-            } else {
-                $userApiPath = self::API_PATH . '/user/' . $apiPath;
-                $orgApiPath = ''; // No organization path for sub-paths
-            }
+            $apiPath = self::API_PATH . '/user/' . $apiPath;
         }
 
         // Prepare headers for the request
         $headers = [
             'Accept' => 'application/vnd.github+json',
-            'Authorization' => 'Bearer ' . get_option('github_token'),
+            'Authorization' => 'Bearer ' . get_option('github_pw_api_token'),
             'X-GitHub-Api-Version' => self::API_VERSION,
         ];
 
         // Make the request using wp_remote_get
-        $response = $this->make_github_request($userApiPath, $headers);
+        $response = $this->make_github_request($apiPath, $headers);
 
-        // Check HTTP status and handle fallback to organization if needed
-        if ($response['httpCode'] === 404 && !empty($orgApiPath)) {
-            $response = $this->make_github_request($orgApiPath, $headers);
-
-            if ($response['httpCode'] === 404) {
-                error_log("GitHub API: User or organization '$username' not found.");
-                return 'User or organization not found. Please check the username.';
-            }
+        if ($response['httpCode'] === 404) {
+            error_log("GitHub API: User or organization '$github_wp_org' not found.");
+            return __('User or organization not found. Please check the username.', 'github_profile_widget');
         }
 
         // Handle other HTTP errors
         if ($response['httpCode'] !== 200) {
             error_log("GitHub API Error: HTTP {$response['httpCode']}. Response: {$response['body']}");
-            return "An error occurred while fetching the GitHub data. Please try again later.";
+            return __('An error occurred while fetching the GitHub data. Please try again later.', 'github_profile_widget');
         }
 
         // Decode and return the response for successful requests
         return json_decode($response['body']);
     }
 
-    // Helper function for making the GitHub request using wp_remote_get
     private function make_github_request($url, $headers) {
         if (empty($url)) {
             return ['httpCode' => 404, 'body' => ''];
@@ -192,10 +185,6 @@ class GitHub_Profile extends WP_Widget {
 
     public function register_widget_styles() {
         wp_enqueue_style( $this->widget_slug . '-octicons', plugins_url( 'css/octicons/octicons.css', __FILE__ ) );
-    }
-
-    public function register_admin_scripts() {
-        wp_enqueue_script( $this->widget_slug . '-admin-script', plugins_url( 'js/admin.js', __FILE__ ), array( 'jquery' ) );
     }
 
     public function load_theme() {

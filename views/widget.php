@@ -1,9 +1,10 @@
 <?php
-/* 
+/*
  * Github Profile Widget for WordPress
  *
  *     Copyright (C) 2015 Henrique Dias <hacdias@gmail.com>
  *     Copyright (C) 2015 Luís Soares <lsoares@gmail.com>
+ *     Copyright (C) 20204 DJABHipHop <djabhiphop-DJABHipHop@yahoo.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,142 +19,133 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+
+// Prevent direct file access
+if ( ! defined( 'ABSPATH' ) ) {
+    exit;
+}
 ?>
 <?php echo $before_widget ?>
-<div>
+<?php if ( isset( $config["github_wp_title"] ) ) : ?>
+    <?php echo $before_title . esc_html( $config["github_wp_title"] ) . $after_title; ?>
+<?php endif; ?>
+<div class="github-pw<?php if ( $this->is_checked( $config, 'github_wp_toggle_dark_theme' ) ) : ?> github-pw-dark<?php endif; ?>" id="github-pw-<?php echo $profile->id . '-' . $profile->node_id; ?>">
+    <?php if ( $this->is_checked( $config, 'github_wp_toggle_header' ) ) : ?>
+        <div class="github-pw-header">
+            <a href="https://github.com/" target="_blank" title="<?php _e('GitHub', 'github_profile_widget'); ?>">
+                <img loading="lazy" decoding="async" class="github-pw-company-logo"
+                     src="<?php echo plugins_url( '/img/github-mark' . ( $this->is_checked( $config, 'github_wp_toggle_dark_theme' ) ? '-white' : '' ) . '.svg', dirname(__FILE__)); ?>"
+                     alt="<?php _e('GitHub logo', 'github_profile_widget'); ?>" />
+            </a>
 
-	<?php if ( isset( $config["title"] ) ) : ?>
-		<?php echo $before_title . $config["title"] . $after_title; ?>
-	<?php endif; ?>
-	<div class="github-widget<?php if ( $this->is_checked( $config, 'dark_theme' ) ) : ?> dark<?php endif; ?>" id="<?php echo $this->id . '_' . uniqid(); ?>">
+            <a class="github-pw-header-link" target="_blank"
+               href="<?php echo $profile->html_url; ?>" title="<?php _e('View profile', 'github_profile_widget'); ?>">
+                <?php echo $profile->login; ?>
+            </a>
+        </div>
+    <?php endif; ?>
+    <div class="github-pw-body">
+        <?php if ( $this->is_checked( $config, 'github_wp_toggle_avatar_and_name' ) ) : ?>
+            <div class="github-pw-block github-pw-profile">
+                <!-- Profile Image Link -->
+                <a target="_blank" href="<?php echo $profile->html_url; ?>" title="<?php _e('View profile', 'github_profile_widget'); ?>">
+                    <img class="github-pw-profile-avatar" src="<?php echo $profile->avatar_url; ?>" alt="<?php echo $profile->name; ?> avatar">
+                </a>
+                <span class="github-pw-profile-names">
+                    <!-- Profile Name as a Link -->
+                    <a target="_blank" href="<?php echo $profile->html_url; ?>" title="<?php _e('View profile', 'github_profile_widget'); ?>">
+                        <span class="github-pw-profile-name"><?php echo $profile->name; ?></i>
+                    </a>
 
-		<div class="github-widget-header">
-			<img loading="lazy" decoding="async"  class="github-widget-company-logo" title="GitHub"
-			     src="https://github.githubassets.com/favicon.ico" alt="GitHub logo"/>
-
-			<div class="github-widget-header-text">
-				<a class="github-widget-header-link" target="_blank"
-				   href="<?php echo $profile->html_url; ?>" title="View profile">
-					<?php echo $profile->login; ?> (<?php echo $profile->name; ?>)
-				</a>
-			</div>
-		</div>
-
-		<div class="github-widget-content">
-			<?php if ( $this->is_checked( $config, 'avatar_and_name' ) ) : ?>
-				<a target="_blank" href="<?php echo $profile->html_url; ?>" title="View profile">
-            <img class="github-profile-pic" src="<?php echo $profile->avatar_url; ?>" alt="<?php echo $profile->name; ?> avatar">
-                <span class="github-names">
-                    <span class="github-name"><?php echo $profile->name; ?></span>
-                    <span class="github-username"><?php echo $profile->login; ?></span>
+                    <!-- Username as Plain Text -->
+                    <span class="github-pw-profile-username"><?php echo $profile->login; ?></i>
                 </span>
-				</a>
-			<?php endif; ?>
+            </div>
+        <?php endif; ?>
 
-			<?php if ( $this->is_checked( $config, 'meta_info' ) ) : ?>
-				<div class="github-block with-icons">
-					<?php if ( ! empty( $profile->company ) ): ?>
-						<div title="Company"><span
-								class="octicon octicon-organization"></span><?php echo $profile->company; ?></div>
-					<?php endif; ?>
-					<?php if ( ! empty( $profile->location ) ): ?>
-						<div title="Location"><span
-								class="octicon octicon-location"></span><?php echo $profile->location; ?></div>
-					<?php endif; ?>
-					<?php if ( ! empty( $profile->email ) ): ?>
-						<div title="Email"><span class="octicon octicon-mail"></span>
-							<a href="mailto:<?php echo $profile->email; ?>"><?php echo $profile->email; ?></a></div>
-					<?php endif; ?>
-					<?php if ( ! empty( $profile->blog ) ): ?>
-						<div title="Blog"><span class="octicon octicon-link"></span>
-							<a href="<?php echo $profile->blog; ?>" target="_blank"><?php echo $profile->blog; ?></a>
-						</div>
-					<?php endif; ?>
-					<div>
-						<span class="octicon octicon-clock"></span>
-						Joined on <?php echo $profile->created_at->format( 'M d, Y' ); ?>
-					</div>
+        <?php if ( $this->is_checked( $config, 'github_wp_toggle_followers_and_following' ) ): ?>
+            <div class="github-pw-divider"></div>
+            <div class="github-pw-block github-pw-vcard-stats">
+                <a class="github-pw-icons-block github-pw-vcard-stat" target='_blank'
+                   href="<?php echo $profile->html_url; ?>/?tab=followers">
+                    <i class="octicon octicon-person-24"></i>
+                    <strong class="github-pw-vcard-stat-count"><?php echo $profile->followers; ?></strong>
+                    <span class="github-pw-text-muted"><?php _e('Followers', 'github_profile_widget'); ?></i>
+                </a>
+                <span>&bull;</span>
+                <a class="github-pw-vcard-stat" target='_blank'
+                   href="<?php echo $profile->html_url; ?>/?tab=following">
+                    <strong class="github-pw-vcard-stat-count"><?php echo $profile->following; ?></strong>
+                    <span class="github-pw-text-muted"><?php _e('Following', 'github_profile_widget'); ?></i>
+                </a>
+            </div>
+        <?php endif; ?>
 
-				</div>
-			<?php endif; ?>
+        <?php if ( $this->is_checked( $config, 'github_wp_toggle_meta_info' ) ) : ?>
+            <div class="github-pw-divider"></div>
+            <div class="github-pw-block">
+                <?php if ( ! empty( $profile->company ) ): ?>
+                    <div title="<?php _e('Company', 'github_profile_widget'); ?>" class="github-pw-icons-block">
+                        <i class="octicon octicon-organization-24"></i><?php echo ucfirst($profile->company); ?>
+                    </div>
+                <?php endif; ?>
+                <?php if ( ! empty( $profile->location ) ): ?>
+                    <div title="<?php _e('Location', 'github_profile_widget'); ?>" class="github-pw-icons-block"><span
+                            class="octicon octicon-location-24"></i><?php echo $profile->location; ?></div>
+                <?php endif; ?>
+                <?php if ( ! empty( $profile->email ) ): ?>
+                    <div title="<?php _e('Email', 'github_profile_widget'); ?>" class="github-pw-icons-block">
+                        <i class="octicon octicon-mail-24"></i>
+                        <a href="mailto:<?php echo $profile->email; ?>"><?php echo $profile->email; ?></a>
+                    </div>
+                <?php endif; ?>
+                <?php if ( ! empty( $profile->blog ) ): ?>
+                    <div title="<?php _e('Blog', 'github_profile_widget'); ?>" class="github-pw-icons-block">
+                        <i class="octicon octicon-link-24"></i>
+                        <a href="<?php echo $profile->blog; ?>" target="_blank"><?php echo $profile->blog; ?></a>
+                    </div>
+                <?php endif; ?>
+                <div class="github-pw-icons-block">
+                    <i class="octicon octicon-clock-24"></i>
+                    <?php _e('Joined on', 'github_profile_widget'); ?> <?php echo $profile->created_at->format( 'M d, Y' ); ?>
+                </div>
 
-			<?php if ( $this->is_checked( $config, 'followers_and_following' ) ): ?>
-				<div class="github-block github-vcard-stats">
-					<a class="github-vcard-stat" target='_blank'
-					   href="<?php echo $profile->html_url; ?>/?tab=followers">
-						<strong class="github-vcard-stat-count"><?php echo $profile->followers; ?></strong>
-						<span class="text-muted">Followers</span>
-					</a>
-					<a class="github-vcard-stat" target='_blank'
-					   href="<?php echo $profile->html_url; ?>/?tab=following">
-						<strong class="github-vcard-stat-count"><?php echo $profile->following; ?></strong>
-						<span class="text-muted">Following</span>
-					</a>
+            </div>
 
-					<div style="clear: both;"></div>
-				</div>
-			<?php endif; ?>
-
-			<?php if ( $this->is_checked( $config, 'meta_info' ) ) : ?>
-				<div class="github-block with-icons">
-					<div>
-						<span class="octicon octicon-repo"></span>
-						<a href="<?php echo $profile->html_url; ?>/?tab=repositories" target="_blank">
-							<?php echo $profile->public_repos; ?> Public Repositories
-						</a>
-
-						<?php if ( $config['repositories'] == 'on' ): ?>
-							<?php $cid = $this->id . '_' . uniqid(); ?>
-							<input type="checkbox" id="gh-repo-t-<?php echo $cid; ?>" class="github-repos-toggle">
-							<label for="gh-repo-t-<?php echo $cid; ?>" class="github-repos-toggle-la octicon octicon-chevron-down"></label>
-
-							<div class="github-repos">
-								<?php foreach ( $repositories as $repo ) { ?>
-									<div class="github-repo-name">
-										<a target="_blank" href="<?php echo $repo->html_url; ?>"
-										   title="<?php echo $repo->full_name; ?>">
-											<?php echo $repo->name ?>
-										</a>
-									</div>
-								<?php } ?>
-							</div>
-						<?php endif; ?>
-					</div>
-					<div>
-						<span class="octicon octicon-gist"></span>
-						<a href="https://gist.github.com/<?php echo $profile->login; ?>" target="_blank">
-							<?php echo $profile->public_gists; ?> Public Gists
-						</a>
-					</div>
-				</div>
-			<?php endif; ?>
-
-			<?php if ( $this->is_checked( $config, 'organizations' ) && ! empty( $organizations ) ) : ?>
-				<div class="github-block github-organizations">
-					<?php foreach ( $organizations as $org ) { ?>
-						<a target="_blank" href="https://github.com/<?php echo $org->login; ?>"
-						   title="<?php echo $org->login; ?> & <?php echo $org->description; ?>">
-							<img loading="lazy" decoding="async"  src='<?php echo $org->avatar_url; ?>' class="github-avatarurl" alt="<?php echo $org->login; ?> avatar"/>
-						</a>
-					<?php } ?>
-				</div>
-			<?php endif; ?>
-
-
-                    <?php if ( $this->is_checked( $config, 'feed' ) ) : ?>
-                        <div class="github-block github-feed with-icons">
-                            <span class="octicon octicon-rss"></span>
-                            <a href="<?php echo $profile->html_url; ?>?tab=activity" target="_blank">
-                                    Feed
-                            </a>
-
-                            <div class="github-feed-entries">
-                                    <?php require_once 'feed.php'; ?>
-                            </div>
-                        </div>
-                    <?php endif; ?>
-
-		</div>
-	</div>
+            <div class="github-pw-divider"></div>
+            <div class="github-pw-block">
+                <div class="github-pw-icons-block">
+                    <i class="octicon octicon-repo-24"></i>
+                    <a href="<?php echo $profile->html_url; ?>/?tab=repositories" target="_blank">
+                        <?php echo $profile->public_repos; ?> <?php _e('Public Repositories', 'github_profile_widget'); ?>
+                    </a>
+                </div>
+                <div class="github-pw-icons-block">
+                    <i class="octicon octicon-code-24"></i>
+                    <a href="https://gist.github.com/<?php echo $profile->login; ?>" target="_blank">
+                        <?php echo $profile->public_gists; ?> <?php _e('Public Gists', 'github_profile_widget'); ?>
+                    </a>
+                </div>
+                <?php if ( ! empty( $orgs ) ) : ?>
+                    <div class="github-pw-icons-block">
+                        <i class="octicon octicon-organization-24"></i>
+                        <a href="https://gist.github.com/<?php echo $profile->login; ?>" target="_blank">
+                            <?php echo count($orgs); ?> <?php _e('Organizations', 'github_profile_widget'); ?>
+                        </a>
+                    </div>
+                <?php endif; ?>
+            </div>
+        <?php endif; ?>
+    </div>
+    <?php if ( $this->is_checked( $config, 'github_wp_toggle_organizations' ) && ! empty( $orgs ) ) : ?>
+        <div class="github-pw-block github-pw-orgs">
+            <?php foreach ( $orgs as $org ) { ?>
+                <a target="_blank" href="https://github.com/<?php echo $org->login; ?>"
+                   title="<?php echo $org->login; ?> & <?php echo $org->description; ?>">
+                    <img loading="lazy" decoding="async"  src='<?php echo $org->avatar_url; ?>' class="github-pw-org-avatar" alt="<?php echo $org->login; ?> avatar"/>
+                </a>
+            <?php } ?>
+        </div>
+    <?php endif; ?>
 </div>
 <?php echo $after_widget ?>
