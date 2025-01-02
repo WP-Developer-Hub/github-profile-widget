@@ -110,7 +110,7 @@ class GitHub_Profile extends WP_Widget {
         $profile->created_at = new DateTime( $profile->created_at );
         $profile->events_url = str_replace( '{/privacy}', '', $profile->events_url );
 
-        if ( $this->is_checked( $config, 'organizations' ) ) {
+        if ( $this->is_checked( $config, 'organizations' ) || $this->is_checked( $config, 'collaborating_organizations' ) ) {
             if ( $profile->type == 'User' ) {
                 $orgs = $this->get_github_api_content( "orgs", $config );
             }
