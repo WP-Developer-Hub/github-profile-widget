@@ -27,20 +27,20 @@ if ( ! defined( 'ABSPATH' ) ) {
 ?>
 
 <p>
-    <label for="<?php echo $this->get_field_name( 'github_wp_title' ); ?>"><?php _e( 'Title:', 'github_profile_widget' ); ?></label>
+    <label for="<?php echo $this->get_field_name( 'github_pw_title' ); ?>"><?php _e( 'Title:', 'github_profile_widget' ); ?></label>
     <input class="widefat"
-           id="<?php echo $this->get_field_name( 'github_wp_title' ); ?>"
-           name="<?php echo $this->get_field_name( 'github_wp_title' ); ?>"
+           id="<?php echo $this->get_field_name( 'github_pw_title' ); ?>"
+           name="<?php echo $this->get_field_name( 'github_pw_title' ); ?>"
            type="text"
            placeholder="<?php _e( 'Title', 'github_profile_widget' ); ?>"
-           value="<?php echo esc_attr( $github_wp_title ); ?>"/>
+           value="<?php echo esc_attr( $github_pw_title ); ?>"/>
 </p>
 
 <p>
-    <label for="<?php echo $this->get_field_name( 'github_wp_org' ); ?>"><?php _e( 'Organizations:', 'github_profile_widget' ); ?></label>
+    <label for="<?php echo $this->get_field_name( 'github_pw_org' ); ?>"><?php _e( 'Organizations:', 'github_profile_widget' ); ?></label>
     <select class="widefat"
-            id="<?php echo $this->get_field_name( 'github_wp_org' ); ?>"
-            name="<?php echo $this->get_field_name( 'github_wp_org' ); ?>">
+            id="<?php echo $this->get_field_name( 'github_pw_org' ); ?>"
+            name="<?php echo $this->get_field_name( 'github_pw_org' ); ?>">
         <option value="none" <?php echo empty( $org ) ? 'selected' : ''; ?>><?php _e( 'User', 'github_profile_widget' ); ?></option>
         <?php foreach ( $orgs as $org_item ): ?>
             <option value="<?php echo esc_attr( $org_item->login ); ?>"
@@ -61,7 +61,7 @@ if ( ! defined( 'ABSPATH' ) ) {
                            <?php checked( ${$option}, 'on' ); ?>
                            id="<?php echo $this->get_field_id( $option ); ?>"
                            name="<?php echo $this->get_field_name( $option ); ?>"/>
-                    <?php echo ucfirst( str_replace( '_', ' ', $option ) ); ?>
+                    <?php echo ucfirst(str_replace(['github_pw_', '_'], [' ', ' '], $option)); ?>
                 </label>
             </li>
         <?php endforeach; ?>
@@ -72,10 +72,10 @@ if ( ! defined( 'ABSPATH' ) ) {
     <summary><?php _e( 'Advance', 'github_profile_widget' ); ?></summary>
     <ul>
         <li>
-        <label for="<?php echo $this->get_field_name( 'github_wp_cache' ); ?>"><?php _e( 'Minutes of cache:', 'github_profile_widget' ); ?></label>
+        <label for="<?php echo $this->get_field_name( 'github_pw_cache' ); ?>"><?php _e( 'Minutes of cache:', 'github_profile_widget' ); ?></label>
         <input class="widefat" title="<?php _e( 'Value 0 disables cache', 'github_profile_widget' ); ?>"
-               id="<?php echo $this->get_field_name( 'github_wp_cache' ); ?>"
-               name="<?php echo $this->get_field_name( 'github_wp_cache' ); ?>"
+               id="<?php echo $this->get_field_name( 'github_pw_cache' ); ?>"
+               name="<?php echo $this->get_field_name( 'github_pw_cache' ); ?>"
                type="number"
                placeholder="<?php _e( 'Cache expiration time in minutes', 'github_profile_widget' ); ?>"
                value="<?php echo esc_attr( $cache ); ?>"/>

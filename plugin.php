@@ -29,12 +29,19 @@ class GitHub_Profile extends WP_Widget {
 
     protected $widget_slug = 'github-profile';
     protected $checkboxes = array(
-        "github_wp_toggle_header",
-        "github_wp_toggle_avatar_and_name",
-        "github_wp_toggle_meta_info",
-        "github_wp_toggle_followers_and_following",
-        "github_wp_toggle_organizations",
-        "github_wp_toggle_dark_theme"
+        "github_pw_toggle_header",
+        "github_pw_toggle_avatar_and_name",
+        "github_pw_toggle_followers_and_following",
+        "github_pw_toggle_company",
+        "github_pw_toggle_location",
+        "github_pw_toggle_email",
+        "github_pw_toggle_blog",
+        "github_pw_toggle_joined_on",
+        "github_pw_toggle_public_projects",
+        "github_pw_toggle_public_contributions",
+        "github_pw_toggle_collaborating_organizations",
+        "github_pw_toggle_organizations",
+        "github_pw_toggle_dark_theme"
     );
 
     public function __construct() {
@@ -55,13 +62,19 @@ class GitHub_Profile extends WP_Widget {
         } else {
 
             $default = array(
-                "github_wp_toggle_org" => "none",
-                "github_wp_toggle_avatar_and_name" => "on",
-                "github_wp_toggle_followers_following" => "on",
-                "github_wp_toggle_meta_info" => "on",
-                "github_wp_toggle_organizations" => "on",
-                "github_wp_toggle_cache" => "50",
-                "github_wp_toggle_dark_theme" => "off"
+                "github_pw_toggle_header" => "on",
+                "github_pw_toggle_avatar_and_name" => "on",
+                "github_pw_toggle_followers_and_following" => "on",
+                "github_pw_toggle_company" => "on",
+                "github_pw_toggle_location" => "on",
+                "github_pw_toggle_email" => "on",
+                "github_pw_toggle_blog" => "on",
+                "github_pw_toggle_joined_on" => "on",
+                "github_pw_toggle_public_projects" => "on",
+                "github_pw_toggle_public_contributions" => "on",
+                "github_pw_toggle_collaborating_organizations" => "on",
+                "github_pw_toggle_organizations" => "on",
+                "github_pw_toggle_dark_theme" => "off"
             );
 
             $config = ! isset( $config['first_time'] ) ? $default : $config;
@@ -97,7 +110,7 @@ class GitHub_Profile extends WP_Widget {
         $profile->created_at = new DateTime( $profile->created_at );
         $profile->events_url = str_replace( '{/privacy}', '', $profile->events_url );
 
-        if ( $this->is_checked( $config, 'github_wp_toggle_organizations' ) ) {
+        if ( $this->is_checked( $config, 'organizations' ) ) {
             if ( $profile->type == 'User' ) {
                 $orgs = $this->get_github_api_content( "orgs", $config );
             }
@@ -111,16 +124,16 @@ class GitHub_Profile extends WP_Widget {
     }
 
     private function get_github_api_content($apiPath, $config) {
-        // Safely check for the 'github_wp_org' index
-        $github_wp_org = isset($config['github_wp_org']) ? sanitize_text_field($config['github_wp_org']) : '';
+        // Safely check for the 'github_pw_org' index
+        $github_pw_org = isset($config['github_pw_org']) ? sanitize_text_field($config['github_pw_org']) : '';
 
         // Derive API paths based on whether org is provided or not
         if (empty($apiPath)) {
             // If no sub-path is given, use org or user
-            if (empty($github_wp_org) || $github_wp_org === 'none') {
+            if (empty($github_pw_org) || $github_pw_org === 'none') {
                 $apiPath = self::API_PATH . '/user';
             } else {
-                $apiPath = self::API_PATH . '/orgs/' . $github_wp_org;
+                $apiPath = self::API_PATH . '/orgs/' . $github_pw_org;
             }
         } else {
             $apiPath = self::API_PATH . '/user/' . $apiPath;
@@ -137,7 +150,7 @@ class GitHub_Profile extends WP_Widget {
         $response = $this->make_github_request($apiPath, $headers);
 
         if ($response['httpCode'] === 404) {
-            error_log("GitHub API: User or organization '$github_wp_org' not found.");
+            error_log("GitHub API: User or organization '$github_pw_org' not found.");
             return __('User or organization not found. Please check the username.', 'github_profile_widget');
         }
 
@@ -181,7 +194,8 @@ class GitHub_Profile extends WP_Widget {
     }
 
     public function is_checked( $conf, $name ) {
-        return isset( $conf[ $name ] ) && $conf[ $name ] == 'on';
+        $prefix = 'github_pw_toggle_';
+        return isset( $conf[ $prefix.$name ] ) && $conf[ $prefix.$name ] == 'on';
     }
 
     public function register_widget_styles() {

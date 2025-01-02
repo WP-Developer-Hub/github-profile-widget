@@ -29,13 +29,12 @@
 .github-pw-divider {
     height: 1px;
     display: block;
-    background: var(--github-pw-divider-color); /* Use divider color from border */
+    background: var(--github-pw-divider-color);
 }
 
 .github-pw-block {
-    margin: 20px;
+    margin: 15px;
     display: block;
-    font-size: 14px;
 }
 
 .github-pw-icons-block {
@@ -101,7 +100,7 @@
     font-weight: bold;
     background-color: var(--github-pw-header-bg-color);
     border-bottom: 1px solid var(--github-pw-border-color);
-    padding: 10px;
+    padding: 15px;
     margin: 0;
 }
 
@@ -179,30 +178,32 @@
 }
 
 .github-pw-orgs {
-    background-color: var(--github-pw-header-bg-color); /* Light or dark background depending on mode */
-    border-top: 1px solid var(--github-pw-border-color); /* Divider color */
-    padding: 10px; /* Padding around content */
-    margin: 0;
+    gap: 10px;
+    margin: 0px;
+    padding: 15px;
     display: flex;
-    gap: 10px; /* Spacing between organization items */
-    flex-wrap: wrap; /* Allow items to wrap when screen space is small */
+    flex-wrap: wrap;
+    background-color: var(--github-pw-header-bg-color);
+    border-top: 1px solid var(--github-pw-border-color);
+}
+
+.github-pw-orgs a {
+    margin: 0px;
+    max-width: 40px;
+    max-height: 40px;
 }
 
 .github-pw-orgs .github-pw-org-avatar {
+    margin: 0px;
     max-width: 40px;
     border: 1px solid var(--github-pw-border-color);
 }
 
 .github-pw-orgs a:hover .github-pw-org-avatar {
-    border-color: var(--github-pw-link-hover-color); /* Hover effect on icon background */
+    border-color: var(--github-pw-link-hover-color);
 }
 
 @container github-pw (max-width: 700px) {
-    .github-pw-block,
-    .github-pw-header {
-        margin: 10px;
-    }
-
     .github-pw-profile-avatar {
         width: 64px;
     }
