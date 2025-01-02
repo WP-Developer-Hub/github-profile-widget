@@ -33,7 +33,7 @@ if ( ! defined( 'ABSPATH' ) ) {
            name="<?php echo $this->get_field_name( 'github_wp_title' ); ?>"
            type="text"
            placeholder="<?php _e( 'Title', 'github_profile_widget' ); ?>"
-           value="<?php echo esc_attr( github_wp_$title ); ?>"/>
+           value="<?php echo esc_attr( $github_wp_title ); ?>"/>
 </p>
 
 <p>

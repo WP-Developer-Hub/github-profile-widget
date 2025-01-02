@@ -111,7 +111,8 @@ class GitHub_Profile extends WP_Widget {
     }
 
     private function get_github_api_content($apiPath, $config) {
-        $github_wp_org = sanitize_text_field($config['github_wp_org']);
+        // Safely check for the 'github_wp_org' index
+        $github_wp_org = isset($config['github_wp_org']) ? sanitize_text_field($config['github_wp_org']) : '';
 
         // Derive API paths based on whether org is provided or not
         if (empty($apiPath)) {
