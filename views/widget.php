@@ -54,11 +54,11 @@ if ( ! defined( 'ABSPATH' ) ) {
                 <span class="github-pw-profile-names">
                     <!-- Profile Name as a Link -->
                     <a target="_blank" href="<?php echo $profile->html_url; ?>" title="<?php _e('View profile', 'github_profile_widget'); ?>">
-                        <span class="github-pw-profile-name"><?php echo $profile->name; ?></i>
+                        <span class="github-pw-profile-name"><?php echo $profile->name; ?></span>
                     </a>
 
                     <!-- Username as Plain Text -->
-                    <span class="github-pw-profile-username"><?php echo $profile->login; ?></i>
+                    <span class="github-pw-profile-username"><?php echo $profile->login; ?></span>
                 </span>
             </div>
         <?php endif; ?>
@@ -70,13 +70,13 @@ if ( ! defined( 'ABSPATH' ) ) {
                    href="<?php echo $profile->html_url; ?>/?tab=followers">
                     <i class="octicon octicon-person-24"></i>
                     <strong class="github-pw-vcard-stat-count"><?php echo $profile->followers; ?></strong>
-                    <span class="github-pw-text-muted"><?php _e('Followers', 'github_profile_widget'); ?></i>
+                    <span class="github-pw-text-muted"><?php _e('Followers', 'github_profile_widget'); ?></span>
                 </a>
                 <span>&bull;</span>
                 <a class="github-pw-vcard-stat" target='blank'
                    href="<?php echo $profile->html_url; ?>/?tab=following">
                     <strong class="github-pw-vcard-stat-count"><?php echo $profile->following; ?></strong>
-                    <span class="github-pw-text-muted"><?php _e('Following', 'github_profile_widget'); ?></i>
+                    <span class="github-pw-text-muted"><?php _e('Following', 'github_profile_widget'); ?></span>
                 </a>
             </div>
         <?php endif; ?>
@@ -98,14 +98,16 @@ if ( ! defined( 'ABSPATH' ) ) {
 
                 <?php if ( $this->is_checked( $config, 'location' ) && ! empty( $profile->location ) ): ?>
                     <div title="<?php _e('Location', 'github_profile_widget'); ?>" class="github-pw-icons-block">
-                        <i class="octicon octicon-location-24"></i><?php echo $profile->location; ?>
+                        <i class="octicon octicon-location-24"></i>
+                        <?php echo $profile->location; ?>
                     </div>
                 <?php endif; ?>
 
                 <?php if ( $this->is_checked( $config, 'email' ) && ! empty( $profile->email ) ): ?>
                     <div title="<?php _e('Email', 'github_profile_widget'); ?>" class="github-pw-icons-block">
                         <i class="octicon octicon-mail-24"></i>
-                        <a href="mailto:<?php echo $profile->email; ?>"><?php echo $profile->email; ?></a>
+                        <a href="mailto:<?php echo $profile->email; ?>">
+                        <?php echo $profile->email; ?></a>
                     </div>
                 <?php endif; ?>
 
