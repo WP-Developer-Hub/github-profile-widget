@@ -25,6 +25,11 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 ?>
+<?php
+$github_pw_title = isset($config['github_pw_title']) ? $config['github_pw_title'] : '';
+$github_pw_org = isset($config['github_pw_org']) ? $config['github_pw_org'] : 'none';
+$github_pw_cache = isset($config['github_pw_cache']) ? $config['github_pw_cache'] : '';
+?>
 
 <p>
     <label for="<?php echo $this->get_field_name( 'github_pw_title' ); ?>"><?php _e( 'Title:', 'github_profile_widget' ); ?></label>
@@ -37,14 +42,18 @@ if ( ! defined( 'ABSPATH' ) ) {
 </p>
 
 <p>
-    <label for="<?php echo $this->get_field_name( 'github_pw_org' ); ?>"><?php _e( 'Organizations:', 'github_profile_widget' ); ?></label>
+    <label for="<?php echo $this->get_field_name( 'github_pw_org' ); ?>">
+        <?php _e( 'Organizations:', 'github_profile_widget' ); ?>
+    </label>
     <select class="widefat"
             id="<?php echo $this->get_field_name( 'github_pw_org' ); ?>"
             name="<?php echo $this->get_field_name( 'github_pw_org' ); ?>">
-        <option value="none" <?php echo empty( $org ) ? 'selected' : ''; ?>><?php _e( 'User', 'github_profile_widget' ); ?></option>
+        <option value="none" <?php selected( $github_pw_org, 'none' ); ?>>
+            <?php _e( 'None', 'github_profile_widget' ); ?>
+        </option>
         <?php foreach ( $orgs as $org_item ): ?>
             <option value="<?php echo esc_attr( $org_item->login ); ?>"
-                <?php echo ( $org == $org_item->login ) ? 'selected' : ''; ?>>
+                <?php selected( $github_pw_org, $org_item->login ); ?>>
                 <?php echo esc_html( $org_item->login ); ?>
             </option>
         <?php endforeach; ?>
@@ -65,20 +74,5 @@ if ( ! defined( 'ABSPATH' ) ) {
                 </label>
             </li>
         <?php endforeach; ?>
-    </ul>
-</details>
-
-<details>
-    <summary><?php _e( 'Advance', 'github_profile_widget' ); ?></summary>
-    <ul>
-        <li>
-        <label for="<?php echo $this->get_field_name( 'github_pw_cache' ); ?>"><?php _e( 'Minutes of cache:', 'github_profile_widget' ); ?></label>
-        <input class="widefat" title="<?php _e( 'Value 0 disables cache', 'github_profile_widget' ); ?>"
-               id="<?php echo $this->get_field_name( 'github_pw_cache' ); ?>"
-               name="<?php echo $this->get_field_name( 'github_pw_cache' ); ?>"
-               type="number"
-               placeholder="<?php _e( 'Cache expiration time in minutes', 'github_profile_widget' ); ?>"
-               value="<?php echo esc_attr( $cache ); ?>"/>
-        </li>
     </ul>
 </details>

@@ -46,14 +46,16 @@ class GitHub_Profile extends WP_Widget {
 
     public function __construct() {
         parent::__construct(
-            $this->widget_slug, 'GitHub Profile', $this->widget_slug, array(
+            $this->widget_slug,
+            __('GitHub Profile', 'github_profile_widget'),
+            array(
                 'classname' => $this->widget_slug . '-class',
-                'description' => 'A widget to show a small version of your GitHub profile',
-                $this->widget_slug
+                'description' => __('A widget to show a small version of your GitHub profile', 'github_profile_widget'),
+                'panels_title' => 'github_pw_title', // Disable Widget description override.
+                'panels_icon' => 'dashicons dashicons-editor-code',
+                'panels_groups' => array('djabhiphop'),
             )
         );
-        add_action( 'admin_enqueue_scripts', array( $this, 'register_admin_scripts' ) );
-        add_action( 'wp_enqueue_scripts', array( $this, 'register_widget_styles' ) );
     }
 
     public function form( $config ) {
@@ -62,6 +64,7 @@ class GitHub_Profile extends WP_Widget {
         } else {
 
             $default = array(
+                "github_pw_org" => "none",
                 "github_pw_toggle_header" => "on",
                 "github_pw_toggle_avatar_and_name" => "on",
                 "github_pw_toggle_followers_and_following" => "on",
@@ -74,7 +77,7 @@ class GitHub_Profile extends WP_Widget {
                 "github_pw_toggle_public_contributions" => "on",
                 "github_pw_toggle_collaborating_organizations" => "on",
                 "github_pw_toggle_organizations" => "on",
-                "github_pw_toggle_dark_theme" => "off"
+                "github_pw_toggle_dark_theme" => "off",
             );
 
             $config = ! isset( $config['first_time'] ) ? $default : $config;
@@ -169,14 +172,35 @@ class GitHub_Profile extends WP_Widget {
             return ['httpCode' => 404, 'body' => ''];
         }
 
-        // Using wp_remote_get to send the request
+        // 10 seconds timeout (you can adjust this value)
+        $timeout = 10;
+
+        // Cache the response for a defined duration (in seconds)
+        $cache_duration = get_option('github_pw_cache', 60) * 60;
+        
+        // Create a unique cache key based on the URL
+        $cache_key = 'github_request_' . md5($url);
+        
+        // Check if cached data exists
+        $cached_response = get_transient($cache_key);
+
+        if ($cached_response) {
+            // If cached data exists, return it
+            return $cached_response;
+        }
+
+        // Define the timeout (in seconds)
+
+        // If no cached data, make the request with a timeout
         $response = wp_remote_get($url, [
-            'headers' => $headers,
-            'timeout' => 15, // Optional timeout setting
+            'headers' => $headers, // Pass the headers with the request
+            'timeout' => $timeout,  // Timeout after 10 seconds
         ]);
 
-        // Check for errors
+        // Check for errors in the response
         if (is_wp_error($response)) {
+            // Log the error for debugging purposes
+            error_log('GitHub API Error: ' . $response->get_error_message());
             return [
                 'httpCode' => 500,
                 'body' => $response->get_error_message(),
@@ -186,6 +210,14 @@ class GitHub_Profile extends WP_Widget {
         // Get the HTTP status code and body from the response
         $httpCode = wp_remote_retrieve_response_code($response);
         $body = wp_remote_retrieve_body($response);
+
+        // Log the status code for debugging purposes (optional)
+        error_log("GitHub API Request to {$url} returned HTTP code {$httpCode}");
+
+        set_transient($cache_key, [
+            'httpCode' => $httpCode,
+            'body' => $body,
+        ], $cache_duration);
 
         return [
             'httpCode' => $httpCode,
@@ -198,11 +230,8 @@ class GitHub_Profile extends WP_Widget {
         return isset( $conf[ $prefix.$name ] ) && $conf[ $prefix.$name ] == 'on';
     }
 
-    public function register_widget_styles() {
-        wp_enqueue_style( $this->widget_slug . '-octicons', plugins_url( 'css/octicons/octicons.min.css', __FILE__ ) );
-    }
-
     public function load_theme() {
+        wp_enqueue_style( $this->widget_slug . '-octicons', plugins_url( 'css/octicons/octicons.min.css', __FILE__ ) );
         wp_enqueue_style( $this->widget_slug . '-widget-styles', plugins_url( "css/widget.css", __FILE__ ) );
     }
 }
@@ -211,3 +240,22 @@ add_action( 'widgets_init', function() {
     register_widget( 'GitHub_Profile' );
 } );
 
+add_filter('siteorigin_panels_widget_dialog_tabs', function($tabs) {
+    $tabs[] = array(
+        'title' => __('DJABHipHop', 'pt'),
+        'filter' => array(
+            'groups' => array('djabhiphop'),
+        ),
+    );
+    return $tabs;
+}, 20);
+
+add_filter('siteorigin_panels_widgets', function($widgets){
+   $widgets['GitHub_Profile']['groups'] = array('djabhiphop');
+   return $widgets;
+});
+
+add_filter( 'siteorigin_panels_widgets', function($widgets) {
+   $widgets['GitHub_Profile']['groups'][] = 'recommended';
+   return $widgets;
+}, 12 );
