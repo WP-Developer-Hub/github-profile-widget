@@ -38,8 +38,7 @@ if ( ! defined( 'ABSPATH' ) ) {
                      alt="<?php _e('GitHub logo', 'github_profile_widget'); ?>" />
             </a>
 
-            <a class="github-pw-header-link" target="_blank"
-               href="<?php echo $profile->html_url; ?>" title="<?php _e('View profile', 'github_profile_widget'); ?>">
+            <a class="github-pw-header-link" target="_blank" href="<?php echo $profile->html_url; ?>" title="<?php _e('View profile', 'github_profile_widget'); ?>">
                 <?php echo $profile->login; ?>
             </a>
         </div>
@@ -70,9 +69,11 @@ if ( ! defined( 'ABSPATH' ) ) {
                    href="<?php echo $profile->html_url; ?>/?tab=followers">
                     <i class="octicon octicon-person-24"></i>
                     <strong class="github-pw-vcard-stat-count"><?php echo $profile->followers; ?></strong>
-                    <span class="github-pw-text-muted"><?php _e('Followers', 'github_profile_widget'); ?></span>
+                    <span class="github-pw-text-muted">
+                        <?php echo esc_html(_n('Follower', 'Followers', intval($profile->followers), 'github_profile_widget')); ?>
+                    </span>
                 </a>
-                <span>&bull;</span>
+                <span class="github-pw-text-small">&bull;</span>
                 <a class="github-pw-vcard-stat" target='blank'
                    href="<?php echo $profile->html_url; ?>/?tab=following">
                     <strong class="github-pw-vcard-stat-count"><?php echo $profile->following; ?></strong>
@@ -106,8 +107,7 @@ if ( ! defined( 'ABSPATH' ) ) {
                 <?php if ( $this->is_checked( $config, 'email' ) && ! empty( $profile->email ) ): ?>
                     <div title="<?php _e('Email', 'github_profile_widget'); ?>" class="github-pw-icons-block">
                         <i class="octicon octicon-mail-24"></i>
-                        <a href="mailto:<?php echo $profile->email; ?>">
-                        <?php echo $profile->email; ?></a>
+                        <a href="mailto:<?php echo $profile->email; ?>"><?php echo $profile->email; ?></a>
                     </div>
                 <?php endif; ?>
 
@@ -121,7 +121,10 @@ if ( ! defined( 'ABSPATH' ) ) {
                 <?php if ( $this->is_checked( $config, 'joined_on' ) ): ?>
                     <div class="github-pw-icons-block">
                         <i class="octicon octicon-clock-24"></i>
-                        <?php _e('Joined on', 'github_profile_widget'); ?> <?php echo $profile->created_at->format( 'M d, Y' ); ?>
+                        <span>
+                            <?php _e('Joined on', 'github_profile_widget'); ?>
+                            <?php echo $profile->created_at->format( 'M d, Y' ); ?>
+                        </span>
                     </div>
                 <?php endif; ?>
             </div>
@@ -146,7 +149,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
             <?php if ( $this->is_checked( $config, 'public_contributions' ) && ! empty( $profile->public_gists ) ) : ?>
                 <div class="github-pw-icons-block">
-                    <i class="octicon octicon-code-24"></i>
+                    <i class="octicon octicon-code-square-24"></i>
                     <a href="https://gist.github.com/<?php echo $profile->login; ?>" target="_blank">
                         <?php echo $profile->public_gists; ?> <?php _e('Public Contributions', 'github_profile_widget'); ?>
                     </a>
