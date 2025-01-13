@@ -153,13 +153,17 @@ class GitHub_Profile extends WP_Widget {
         $response = $this->make_github_request($apiPath, $headers);
 
         if ($response['httpCode'] === 404) {
-            error_log("GitHub API: User or organization '$github_pw_org' not found.");
+            if (defined('WP_DEBUG') && WP_DEBUG) {
+                error_log("GitHub API: User or organization '$github_pw_org' not found.");
+            }
             return __('User or organization not found. Please check the username.', 'github_profile_widget');
         }
 
         // Handle other HTTP errors
         if ($response['httpCode'] !== 200) {
-            error_log("GitHub API Error: HTTP {$response['httpCode']}. Response: {$response['body']}");
+            if (defined('WP_DEBUG') && WP_DEBUG) {
+                error_log("GitHub API Error: HTTP {$response['httpCode']}. Response: {$response['body']}");
+            }
             return __('An error occurred while fetching the GitHub data. Please try again later.', 'github_profile_widget');
         }
 
@@ -212,7 +216,9 @@ class GitHub_Profile extends WP_Widget {
         $body = wp_remote_retrieve_body($response);
 
         // Log the status code for debugging purposes (optional)
-        error_log("GitHub API Request to {$url} returned HTTP code {$httpCode}");
+        if (defined('WP_DEBUG') && WP_DEBUG) {
+            error_log("GitHub API Request to {$url} returned HTTP code {$httpCode}");
+        }
 
         set_transient($cache_key, [
             'httpCode' => $httpCode,
