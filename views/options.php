@@ -67,7 +67,7 @@ $github_pw_cache = isset($config['github_pw_cache']) ? $config['github_pw_cache'
             <li>
                 <label for="<?php echo $this->get_field_id( $option ); ?>">
                     <input class="checkbox" type="checkbox"
-                           <?php checked( ${$option}, 'on' ); ?>
+                           <?php echo ( isset( ${$option} ) && ${$option} === 'on' ) ? 'checked' : ''; ?>
                            id="<?php echo $this->get_field_id( $option ); ?>"
                            name="<?php echo $this->get_field_name( $option ); ?>"/>
                     <?php echo ucfirst(str_replace(['github_pw_', '_'], [' ', ' '], $option)); ?>
