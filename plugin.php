@@ -19,13 +19,25 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
+define('GH_PW_PLUGIN_ORG', 'WP-Developer-Hub');
+define('GH_PW_PLUGIN_SLUG', 'github-profile-widget');
+define('GH_PW_API_PATH', 'https://api.github.com');
+define('GH_PW_PLUGIN_URL', plugin_dir_url(__FILE__));
+define('GH_PW_PLUGIN_BASENAME', plugin_basename(__FILE__));
+
 require_once( 'lib/htmlcompressor.php' );
 require_once( 'views/token-settings.php' );
+
+if (!defined('WP_DEBUG') && !WP_DEBUG) {
+    require_once( 'lib/github-profile-widget-updates.php' );
+    $api_endpoint = GH_PW_API_PATH . '/repos/' . GH_PW_PLUGIN_ORG . '/' . GH_PW_PLUGIN_SLUG . '/releases/latest';
+    new GitHub_Profile_Plugin_Auto_Updates($api_endpoint, GH_PW_PLUGIN_URL, GH_PW_PLUGIN_SLUG, GH_PW_PLUGIN_BASENAME);
+}
 
 if (!class_exists('GitHub_Profile')) {
     class GitHub_Profile extends WP_Widget {
 
-        const API_PATH = "https://api.github.com";
+        const API_PATH = GH_PW_API_PATH;
         const API_VERSION = "2022-11-28";
 
         protected $widget_slug = 'github-profile';
