@@ -27,7 +27,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 ?>
 <?php echo $before_widget ?>
 <?php if ( isset( $config["github_pw_title"] ) ) : ?>
-    <?php echo $before_title . esc_html( $config["github_pw_title"] ) . $after_title; ?>
+    <?php echo $before_title . apply_filters('widget_title', esc_html( $config["github_pw_title"] ) ) . $after_title; ?>
 <?php endif; ?>
 <div class="github-pw<?php if ( $this->is_checked( $config, 'dark_theme' ) ) : ?> github-pw-dark<?php endif; ?>" id="github-pw-<?php echo $profile->id . '-' . $profile->node_id; ?>">
     <?php if ( $this->is_checked( $config, 'header' ) ) : ?>
