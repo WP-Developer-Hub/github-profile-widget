@@ -16,23 +16,62 @@ This is a very simple plugin which gives you a widget to show your GitHub profil
 **Features include:**
 
 + Basic information (username, name);
-+ Company, local, email, website and when you joined to GitHub;
++ Company, location, email, website, and when you joined GitHub;
 + Followers and following numbers;
 + Repositories and gists;
 + The organizations where you are included.
 
 **Disclaimer: we are not affiliated with GitHub.**
 
-== Installation ==
+---
 
-1. Install "GitHub Profile Widget" via the WordPress.org plugin directory or uploading the files to your server.
-2. Go to your widgets dashboard and add "GitHub Profile Widget".
-3. Fill your GitHub username.
-4. Click save and you are done.
+## ✨ New Features / Enhancements
 
-== Screenshots ==
+This version adds several advanced features for **full automation, multi-widget support, and better usability**:
 
-1. The Widget with all options enabled
-2. The repositories list
-3. Widget options
-4. Widget advanced options
+- **Token-Based Fetching**: Enter a GitHub token once — the widget automatically fetches your profile info and all organizations without needing to type in usernames.  
+- **Dropdown Organization Selector**: Choose `"None"` to display your profile only, or select any organization to display its info.  
+- **Multi-Widget Support**: Use multiple widgets on the same homepage, each showing a different organization or your profile, using the **same global token**.  
+- **Toggleable Options**: Show or hide avatar, followers, public projects, email, blog, location, company, join date, contributions, and more.  
+- **Caching**: Reduces API requests and prevents hitting rate limits.  
+- **Light/Dark Mode**: Optional theme toggle per widget.  
+- **Zero Maintenance**: Once configured, the widget continues working unless GitHub API changes.  
+- **Automatic Updates via GitHub Releases API**: The plugin checks GitHub Releases and automatically notifies or updates itself when a new version is available.
+
+---
+
+## Features (Original)
+
+- Basic information (username, name)  
+- Company, location, email, website, join date  
+- Followers and following numbers  
+- Repositories and gists  
+- Organizations the user belongs to  
+
+---
+
+## Installation
+
+1. Install the plugin via WordPress.org or upload manually.  
+2. Add the widget to your WordPress dashboard.  
+3. Fill in your GitHub username (or enter your token for full functionality).  
+4. Click save — done.  
+
+> **Note:** Entering a token is optional but recommended to fetch **all organizations and more profile information** without hitting API rate limits.
+
+---
+
+## Screenshots
+
+- Widget with all options enabled  
+- Repositories list  
+- Widget options  
+- Advanced widget options  
+
+*(Replace with updated screenshots if desired.)*
+
+---
+
+## License
+
+GPLv2 or later
