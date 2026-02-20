@@ -78,6 +78,7 @@
 /* Hover effect for links Rules */
 .github-pw a {
   outline: 0 !important;
+  text-box-trim: trim-both;
   text-decoration: none !important;
   transition: all 250ms linear 0s;
   color: var(--github-pw-text-color);
@@ -131,22 +132,21 @@
 .github-pw-profile-avatar {
   width: 128px;
   display: block;
-  vertical-align: bottom;
+  object-fit: cover;
 }
 
 .github-pw-profile-names {
   gap: 2px;
-  top: -2px;
   display: flex;
-  line-height: 1;
+  padding-top: 2px;
   margin-left: 10px;
-  position: relative;
+  line-height: normal;
   flex-direction: column;
 }
 
 .github-pw-profile-name {
   font-size: 18px;
-  line-height: 1.25;
+  line-height: normal;
 }
 
 .github-pw-profile-username {
