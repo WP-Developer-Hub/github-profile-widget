@@ -37,8 +37,8 @@ class GitHub_Profile_widgat_API_Settings {
     // Add the settings page to the WordPress admin menu
     public function add_settings_menu() {
         add_options_page(
-            __('GitHub PW API Settings', 'github_profile_widget'), // Page Title
-            __('GitHub PW API Settings', 'github_profile_widget'), // Menu Title
+            __('GitHub PW API Settings', 'github-profile-widget'), // Page Title
+            __('GitHub PW API Settings', 'github-profile-widget'), // Menu Title
             'manage_options', // Capability
             'github-pw-api-settings', // Menu Slug
             array($this, 'render_settings_page') // Callback function
@@ -54,7 +54,7 @@ class GitHub_Profile_widgat_API_Settings {
         // Add a settings section
         add_settings_section(
             'github_pw_api_settings_section', // Section ID
-            __('GitHub Profile Settings', 'github_profile_widget'), // Section Title
+            __('GitHub Profile Settings', 'github-profile-widget'), // Section Title
             array($this, 'section_callback'), // Callback function
             'github-pw-api-settings' // Page slug
         );
@@ -62,7 +62,7 @@ class GitHub_Profile_widgat_API_Settings {
         // Add the GitHub token field
         add_settings_field(
             'github_pw_api_token_field', // Field ID
-            __('GitHub API Token', 'github_profile_widget'), // Field Title
+            __('GitHub API Token', 'github-profile-widget'), // Field Title
             array($this, 'github_pw_api_token_field_callback'), // Callback function
             'github-pw-api-settings', // Page slug
             'github_pw_api_settings_section' // Section ID
@@ -71,7 +71,7 @@ class GitHub_Profile_widgat_API_Settings {
         // Add the Cache duration field
         add_settings_field(
             'github_pw_cache_field', // Field ID
-            __('Cache Duration (minutes)', 'github_profile_widget'), // Field Title
+            __('Cache Duration (minutes)', 'github-profile-widget'), // Field Title
             array($this, 'github_pw_cache_field_callback'), // Callback function
             'github-pw-api-settings', // Page slug
             'github_pw_api_settings_section' // Section ID
@@ -80,7 +80,7 @@ class GitHub_Profile_widgat_API_Settings {
 
     // Section description callback
     public function section_callback() {
-        echo '<p>' . __('Enter your GitHub personal access token below to authenticate API requests and display your GitHub profile data on the site. You can also set the cache duration for API responses.', 'github_profile_widget') . '</p>';
+        echo '<p>' . esc_html__('Enter your GitHub personal access token below to authenticate API requests and display your GitHub profile data on the site. You can also set the cache duration for API responses.', 'github-profile-widget') . '</p>';
     }
 
     // GitHub token field callback
@@ -88,13 +88,14 @@ class GitHub_Profile_widgat_API_Settings {
         // Get the current value of the GitHub token
         $github_pw_api_token = get_option('github_pw_api_token');
         ?>
-        <input type="text" name="github_pw_api_token" value="<?php echo esc_attr($github_pw_api_token); ?>" class="regular-text" placeholder="<?php echo esc_attr(__('Enter the GitHub personal access token here.', 'github_profile_widget')); ?>"/>
+        <input type="text" name="github_pw_api_token" value="<?php echo esc_attr($github_pw_api_token); ?>" class="regular-text" placeholder="<?php echo esc_attr_e('Enter the GitHub personal access token here.', 'github-profile-widget'); ?>"/>
         <p class="description">
             <?php
-            echo sprintf(
-                __('If you don\'t have a GitHub token, you can create one by visiting the <a href="%s" target="_blank" rel="noopener noreferrer">GitHub Personal Access Tokens page</a>.', 'github_profile_widget'),
-                'https://github.com/settings/personal-access-tokens'
-            );
+                echo sprintf(
+                    /* translators: %s: URL to the GitHub Personal Access Tokens page. */
+                    esc_html__( 'If you don\'t have a GitHub token, you can create one by visiting the <a href="%s" target="_blank" rel="noopener noreferrer">GitHub Personal Access Tokens page</a>.', 'github-profile-widget' ),
+                    'https://github.com/settings/personal-access-tokens'
+                );
             ?>
         </p>
         <?php
@@ -106,7 +107,7 @@ class GitHub_Profile_widgat_API_Settings {
         $github_pw_cache = get_option('github_pw_cache', 60); // Default to 60 minutes if not set
         ?>
         <input type="number" name="github_pw_cache" value="<?php echo esc_attr($github_pw_cache); ?>" class="small-text" min="1" inputmode="numeric" pattern="\d*" />
-        <p class="description"><?php echo __('Set the cache duration in minutes for GitHub profile data.', 'github_profile_widget'); ?></p>
+        <p class="description"><?php echo esc_html('Set the cache duration in minutes for GitHub profile data.', 'github-profile-widget'); ?></p>
         <?php
     }
 
@@ -114,7 +115,7 @@ class GitHub_Profile_widgat_API_Settings {
     public function render_settings_page() {
         ?>
         <div class="wrap">
-            <h1><?php echo esc_html(__('GitHub Profile Settings', 'github_profile_widget')); ?></h1>
+            <h1><?php esc_html_e('GitHub Profile Settings', 'github-profile-widget'); ?></h1>
             <form method="post" action="options.php">
                 <?php
                 settings_fields('github_pw_api_settings_group'); // Output settings fields

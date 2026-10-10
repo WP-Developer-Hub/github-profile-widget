@@ -32,47 +32,67 @@ $github_pw_cache = isset($config['github_pw_cache']) ? $config['github_pw_cache'
 ?>
 
 <p>
-    <label for="<?php echo $this->get_field_name( 'github_pw_title' ); ?>"><?php _e( 'Title:', 'github_profile_widget' ); ?></label>
+    <label for="<?php echo esc_attr( $this->get_field_name( 'github_pw_title' ) ); ?>"><?php echo esc_html ( 'Title:', 'github-profile-widget' ); ?></label>
     <input class="widefat"
-           id="<?php echo $this->get_field_name( 'github_pw_title' ); ?>"
-           name="<?php echo $this->get_field_name( 'github_pw_title' ); ?>"
+           id="<?php echo esc_attr( $this->get_field_name( 'github_pw_title' ) ); ?>"
+           name="<?php echo esc_attr( $this->get_field_name( 'github_pw_title' ) ); ?>"
            type="text"
-           placeholder="<?php _e( 'Title', 'github_profile_widget' ); ?>"
+           placeholder="<?php esc_attr_e( 'Title', 'github-profile-widget' ); ?>"
            value="<?php echo esc_attr( $github_pw_title ); ?>"/>
 </p>
 
 <p>
-    <label for="<?php echo $this->get_field_name( 'github_pw_org' ); ?>">
-        <?php _e( 'Organizations:', 'github_profile_widget' ); ?>
+    <label for="<?php echo esc_attr($this->get_field_name( 'github_pw_org' ) ); ?>">
+        <?php esc_html_e( 'Organizations:', 'github-profile-widget' ); ?>
     </label>
-    <select class="widefat"
-            id="<?php echo $this->get_field_name( 'github_pw_org' ); ?>"
-            name="<?php echo $this->get_field_name( 'github_pw_org' ); ?>">
+    <select class="widefat" style="max-width:100% !important"
+            id="<?php echo esc_attr( $this->get_field_name( 'github_pw_org' ) ); ?>"
+            name="<?php echo esc_attr( $this->get_field_name( 'github_pw_org' ) ); ?>">
         <option value="none" <?php selected( $github_pw_org, 'none' ); ?>>
-            <?php _e( 'None', 'github_profile_widget' ); ?>
+            <?php echo esc_html( 'None', 'github-profile-widget' ); ?>
         </option>
         <?php foreach ( $orgs as $org_item ): ?>
             <option value="<?php echo esc_attr( $org_item->login ); ?>"
                 <?php selected( $github_pw_org, $org_item->login ); ?>>
-                <?php echo esc_html( $org_item->login ); ?>
+                <?php
+                    echo sprintf(
+                        /* translators: %s: GitHub login name */
+                        esc_html__( '%s⠀', 'github-profile-widget' ),
+                        esc_html( $org_item->login )
+                    );
+                ?>
             </option>
         <?php endforeach; ?>
     </select>
 </p>
 
-<details>
-    <summary><?php _e( 'Show', 'github_profile_widget' ); ?></summary>
-    <ul>
-        <?php foreach ( $this->checkboxes as $option ): ?>
-            <li>
-                <label for="<?php echo $this->get_field_id( $option ); ?>">
-                    <input class="checkbox" type="checkbox"
-                           <?php echo ( isset( ${$option} ) && ${$option} === 'on' ) ? 'checked' : ''; ?>
-                           id="<?php echo $this->get_field_id( $option ); ?>"
-                           name="<?php echo $this->get_field_name( $option ); ?>"/>
-                    <?php echo ucfirst(str_replace(['github_pw_', '_'], [' ', ' '], $option)); ?>
-                </label>
-            </li>
-        <?php endforeach; ?>
+<div class="categorydiv">
+    <ul id="product-mata-tabs" class="category-tabs" role="tablist">
+        <li class="tabs">
+            <a href="#sizes" role="tab" aria-controls="sizes">
+                <?php echo esc_html( 'Apprence', 'github-profile-widget' ); ?>
+            </a>
+        </li>
     </ul>
-</details>
+    <div class="tabs-panel">
+        <ul class="categorychecklist form-no-clear">
+            <?php foreach ( $this->checkboxes as $option ): ?>
+                <li>
+                    <label for="<?php echo esc_attr( $this->get_field_id( $option ) ); ?>">
+                        <input class="checkbox" type="checkbox"
+                               <?php echo esc_attr( isset( ${$option} ) && ${$option} === 'on' ? 'checked' : '' ); ?>
+                               id="<?php echo esc_attr( $this->get_field_id( $option ) ); ?>"
+                               name="<?php echo esc_attr( $this->get_field_name( $option ) ); ?>"/>
+                        <?php
+                            echo sprintf( /* translators: %s: GitHub Display Options */
+                                esc_html__( '%s.', 'github-profile-widget' ),
+                                esc_html(ucwords(trim(str_replace(['github_pw_', '_'], [' ', ' '], $option))))
+                            );
+                        ?>
+                    </label>
+                </li>
+            <?php endforeach; ?>
+        </ul>
+    </div>
+</div>
+<br>

@@ -6,11 +6,12 @@
  * Version: 4.1.0
  * Author: Henrique Dias and Luís Soares (Refactors) and DJABHipHop
  * Author URI: https://github.com/WP-Developer-Hub
+ * Tested up to: 7.0
  * Requires PHP: 7.2
  * Requires at least: 6.0
  * License: GPL2 or later
  * License URI: https://www.gnu.org/licenses/gpl-2.0.html
- * Text Domain: github_profile_widget
+ * Text Domain: github-profile-widget
  * Domain Path: /languages
  */
 
@@ -60,10 +61,10 @@ if (!class_exists('GitHub_Profile')) {
         public function __construct() {
             parent::__construct(
                 $this->widget_slug,
-                __('GitHub Profile', 'github_profile_widget'),
+                __('GitHub Profile', 'github-profile-widget'),
                 array(
                     'classname' => $this->widget_slug . '-class',
-                    'description' => __('A widget to show a small version of your GitHub profile', 'github_profile_widget'),
+                    'description' => __('A widget to show a small version of your GitHub profile', 'github-profile-widget'),
                     'panels_title' => 'github_pw_title', // Disable Widget description override.
                     'panels_icon' => 'dashicons dashicons-editor-code',
                     'panels_groups' => array('djabhiphop'),
@@ -73,9 +74,12 @@ if (!class_exists('GitHub_Profile')) {
 
         public function form( $config ) {
             if (empty(get_option('github_pw_api_token'))) {
-                echo '<p>' . sprintf(__('Go to Settings to configure the GitHub API token. %s', 'github_profile_widget'), '<a href="admin.php?page=github-wp-api-settings">' . __('Go to Settings', 'github_profile_widget') . '</a>') . '</p>';
+                echo '<p>' . sprintf(
+                    /* translators: %s: Link to the GitHub API settings page */
+                    esc_html__('Go to Settings to configure the GitHub API token. %s', 'github-profile-widget'),
+                    '<a href="admin.php?page=github-wp-api-settings">' . esc_html__('Go to Settings', 'github-profile-widget') . '</a>'
+                ) . '</p>';
             } else {
-
                 $default = array(
                     "github_pw_org" => "none",
                     "github_pw_toggle_header" => "on",
@@ -169,7 +173,7 @@ if (!class_exists('GitHub_Profile')) {
                 if (defined('WP_DEBUG') && WP_DEBUG) {
                     error_log("GitHub API: User or organization '$github_pw_org' not found.");
                 }
-                return __('User or organization not found. Please check the username.', 'github_profile_widget');
+                return esc_html__('User or organization not found. Please check the username.', 'github-profile-widget');
             }
 
             // Handle other HTTP errors
@@ -177,7 +181,7 @@ if (!class_exists('GitHub_Profile')) {
                 if (defined('WP_DEBUG') && WP_DEBUG) {
                     error_log("GitHub API Error: HTTP {$response['httpCode']}. Response: {$response['body']}");
                 }
-                return __('An error occurred while fetching the GitHub data. Please try again later.', 'github_profile_widget');
+                return esc_html__('An error occurred while fetching the GitHub data. Please try again later.', 'github-profile-widget');
             }
 
             // Decode and return the response for successful requests
@@ -250,8 +254,8 @@ if (!class_exists('GitHub_Profile')) {
         }
 
         public function load_theme() {
-            wp_enqueue_style( $this->widget_slug . '-octicons', plugins_url( 'css/octicons/octicons.min.css', __FILE__ ) );
-            wp_enqueue_style( $this->widget_slug . '-widget-styles', plugins_url( "css/widget.css", __FILE__ ) );
+            wp_enqueue_style( $this->widget_slug . '-octicons', plugins_url( 'css/octicons/octicons.min.css', __FILE__ ), [], '1.0' );
+            wp_enqueue_style( $this->widget_slug . '-widget-styles', plugins_url( "css/widget.css", __FILE__ ) , [], '1.0' );
         }
     }
 
@@ -261,7 +265,7 @@ if (!class_exists('GitHub_Profile')) {
 
     add_filter('siteorigin_panels_widget_dialog_tabs', function($tabs) {
         $tabs[] = array(
-            'title' => __('DJABHipHop', 'pt'),
+            'title' => __('DJABHipHop', 'github-profile-widget'),
             'filter' => array(
                 'groups' => array('djabhiphop'),
             ),
