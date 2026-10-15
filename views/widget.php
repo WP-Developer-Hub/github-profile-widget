@@ -111,7 +111,7 @@ if ( ! defined( 'ABSPATH' ) ) {
                 <?php if ( $this->is_checked( $config, 'email' ) && ! empty( $profile->email ) ): ?>
                     <div title="<?php esc_attr_e('Email', 'github-profile-widget'); ?>" class="github-pw-icons-block">
                         <i class="octicon octicon-mail-24"></i>
-                        <a href="mailto:<?php echo esc_url($profile->email); ?>"><?php echo esc_html($profile->email); ?></a>
+                        <a href="mailto:<?php echo esc_attr($profile->email); ?>"><?php echo esc_html($profile->email); ?></a>
                     </div>
                 <?php endif; ?>
 
@@ -165,7 +165,7 @@ if ( ! defined( 'ABSPATH' ) ) {
             <?php if ( $this->is_checked( $config, 'public_contributions' ) && ! empty( $profile->public_gists ) ) : ?>
                 <div class="github-pw-icons-block">
                     <i class="octicon octicon-code-square-24"></i>
-                    <a href="https://gist.github.com/<?php echo esc_url($profile->login); ?>" target="_blank">
+                    <a href="https://gist.github.com/<?php echo esc_attr($profile->login); ?>" target="_blank">
                         <?php
                             echo sprintf(
                                 /* translators: %s: Number of public gists */
@@ -180,15 +180,13 @@ if ( ! defined( 'ABSPATH' ) ) {
             <?php if ( $this->is_checked( $config, 'collaborating_organizations' ) && ! empty( $orgs ) ) : ?>
                 <div class="github-pw-icons-block">
                     <i class="octicon octicon-organization-24"></i>
-                    <a href="https://github.com/<?php echo esc_url($profile->login); ?>/organizations" target="_blank">
-                        <?php
-                            echo sprintf(
-                                /* translators: %s: Number of collaborating organizations */
-                                esc_html__('%s Collaborating Organizations', 'github-profile-widget'),
-                                esc_html(count($orgs))
-                            );
-                        ?>
-                    </a>
+                    <?php
+                        echo sprintf(
+                            /* translators: %s: Number of collaborating organizations */
+                            esc_html__('Member of %s Organizations', 'github-profile-widget'),
+                            esc_html(count($orgs))
+                        );
+                    ?>
                 </div>
             <?php endif; ?>
         </div>
