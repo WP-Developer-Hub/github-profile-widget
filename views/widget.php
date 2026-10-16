@@ -50,11 +50,9 @@ if ( ! defined( 'ABSPATH' ) ) {
         <?php if ( $this->is_checked( $config, 'avatar_and_name' ) ) : ?>
             <div class="github-pw-block github-pw-profile">
                 <!-- Profile Image Link -->
-                <?php if ( $this->is_checked( $config, 'avatar_and_name' ) ) : ?>
-                    <a target="_blank" href="<?php echo esc_url($profile->html_url); ?>" title="<?php esc_attr_e('View profile', 'github-profile-widget'); ?>">
-                        <img class="github-pw-profile-avatar" src="<?php echo esc_url($profile->avatar_url); ?>" alt="<?php echo esc_attr($profile->name); ?> avatar">
-                    </a>
-                <?php endif; ?>
+                <a target="_blank" href="<?php echo esc_url($profile->html_url); ?>" title="<?php esc_attr_e('View profile', 'github-profile-widget'); ?>">
+                    <img class="github-pw-profile-avatar" src="<?php echo esc_url($profile->avatar_url); ?>" alt="<?php echo esc_attr($profile->name); ?> avatar">
+                </a>
                 <span class="github-pw-profile-names">
                     <!-- Profile Name as a Link -->
                     <a target="_blank" href="<?php echo esc_url($profile->html_url); ?>" title="<?php esc_attr_e('View profile', 'github-profile-widget'); ?>">
