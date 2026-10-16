@@ -70,7 +70,9 @@ if ( ! defined( 'ABSPATH' ) ) {
                 <a class="github-pw-icons-block github-pw-vcard-stat" target='blank'
                    href="<?php echo esc_url($profile->html_url); ?>/?tab=followers">
                     <i class="octicon octicon-person-24"></i>
-                    <strong class="github-pw-vcard-stat-count"><?php echo esc_html($profile->followers); ?></strong>
+                    <strong class="github-pw-vcard-stat-count">
+                        <?php echo esc_html($profile->followers); ?>
+                    </strong>
                     <span class="github-pw-text-muted">
                         <?php echo esc_html(_n('Follower', 'Followers', intval($profile->followers), 'github-profile-widget')); ?>
                     </span>
@@ -78,8 +80,12 @@ if ( ! defined( 'ABSPATH' ) ) {
                 <span class="github-pw-text-small">&bull;</span>
                 <a class="github-pw-vcard-stat" target='blank'
                    href="<?php echo esc_url($profile->html_url); ?>/?tab=following">
-                    <strong class="github-pw-vcard-stat-count"><?php echo esc_html($profile->following); ?></strong>
-                    <span class="github-pw-text-muted"><?php esc_html_e('Following', 'github-profile-widget'); ?></span>
+                    <strong class="github-pw-vcard-stat-count">
+                        <?php echo esc_html($profile->following); ?>
+                    </strong>
+                    <span class="github-pw-text-muted">
+                        <?php esc_html_e('Following', 'github-profile-widget'); ?>
+                    </span>
                 </a>
             </div>
         <?php endif; ?>
@@ -95,7 +101,8 @@ if ( ! defined( 'ABSPATH' ) ) {
             <div class="github-pw-block">
                 <?php if ( $this->is_checked( $config, 'company' ) && ! empty( $profile->company ) ): ?>
                     <div title="<?php esc_attr_e('Company', 'github-profile-widget'); ?>" class="github-pw-icons-block">
-                        <i class="octicon octicon-organization-24"></i><?php echo esc_html(ucfirst($profile->company)); ?>
+                        <i class="octicon octicon-organization-24"></i>
+                        <?php echo esc_html(ucfirst($profile->company)); ?>
                     </div>
                 <?php endif; ?>
 
@@ -109,14 +116,18 @@ if ( ! defined( 'ABSPATH' ) ) {
                 <?php if ( $this->is_checked( $config, 'email' ) && ! empty( $profile->email ) ): ?>
                     <div title="<?php esc_attr_e('Email', 'github-profile-widget'); ?>" class="github-pw-icons-block">
                         <i class="octicon octicon-mail-24"></i>
-                        <a href="mailto:<?php echo esc_attr($profile->email); ?>"><?php echo esc_html($profile->email); ?></a>
+                        <a href="mailto:<?php echo esc_attr($profile->email); ?>">
+                            <?php echo esc_html($profile->email); ?>
+                        </a>
                     </div>
                 <?php endif; ?>
 
                 <?php if ( $this->is_checked( $config, 'blog' ) && ! empty( $profile->blog ) ): ?>
                     <div title="<?php esc_attr_e('Blog', 'github-profile-widget'); ?>" class="github-pw-icons-block">
                         <i class="octicon octicon-link-24"></i>
-                        <a href="<?php echo esc_url($profile->blog); ?>" target="_blank"><?php echo esc_html($profile->blog); ?></a>
+                        <a href="<?php echo esc_url($profile->blog); ?>" target="_blank">
+                            <?php echo esc_html($profile->blog); ?>
+                        </a>
                     </div>
                 <?php endif; ?>
 
@@ -196,7 +207,7 @@ if ( ! defined( 'ABSPATH' ) ) {
             <?php foreach ( $orgs as $org ) { ?>
                 <a target="_blank" href="https://github.com/<?php echo esc_attr($org->login); ?>"
                    title="<?php echo esc_attr($org->login); ?> & <?php echo esc_attr($org->description); ?>">
-                    <img loading="lazy" decoding="async"  src='<?php echo esc_url($org->avatar_url); ?>' class="github-pw-org-avatar" alt="<?php echo esc_attr($org->login); ?> avatar"/>
+                    <img loading="lazy" decoding="async" src='<?php echo esc_url($org->avatar_url); ?>' class="github-pw-org-avatar" alt="<?php echo esc_attr($org->login); ?> avatar"/>
                 </a>
             <?php } ?>
         </div>
