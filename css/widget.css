@@ -28,8 +28,22 @@
 
 /* Common Rules */
 .github-pw *,
-.github-pw *::after. .github-pw *::before {
+.github-pw *::after,
+.github-pw *::before {
+  outline: none !important;
   box-sizing: border-box !important;
+}
+
+.github-pw img {
+  outline: none !important;
+  filter: brightness(0.9) !important;
+  transition: filter 250ms linear 0s !important;
+}
+
+.github-pw img:focus,
+.github-pw img:hover,
+.github-pw img:active {
+  filter: brightness(1.0) !important;
 }
 
 .github-pw-divider {
@@ -77,7 +91,7 @@
 
 /* Hover effect for links Rules */
 .github-pw a {
-  outline: 0 !important;
+  outline: none !important;
   text-decoration: none !important;
   text-box-trim: trim-both !important;
   transition: all 250ms linear 0s !important;
@@ -208,11 +222,6 @@
   max-width: 40px !important;
   aspect-ratio: 1/1 !important;
   border-radius: 2px !important;
-  border: 1px solid var(--github-pw-border-color) !important;
-}
-
-.github-pw-orgs a:hover .github-pw-org-avatar {
-  border-color: var(--github-pw-link-hover-color) !important;
 }
 
 @container github-pw (max-width: 700px) {
