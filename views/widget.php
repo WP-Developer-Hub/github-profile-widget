@@ -71,7 +71,7 @@ if ( ! defined( 'ABSPATH' ) ) {
                    href="<?php echo esc_url($profile->html_url); ?>/?tab=followers">
                     <i class="octicon octicon-person-24"></i>
                     <strong class="github-pw-vcard-stat-count">
-                        <?php echo esc_html($profile->followers); ?>
+                        <?php echo esc_html(GitHub_Helpper::formatViewCount($profile->followers)); ?>
                     </strong>
                     <span class="github-pw-text-muted">
                         <?php echo esc_html(_n('Follower', 'Followers', intval($profile->followers), 'github-profile-widget')); ?>
@@ -81,7 +81,7 @@ if ( ! defined( 'ABSPATH' ) ) {
                 <a class="github-pw-vcard-stat" target='blank'
                    href="<?php echo esc_url($profile->html_url); ?>/?tab=following">
                     <strong class="github-pw-vcard-stat-count">
-                        <?php echo esc_html($profile->following); ?>
+                        <?php echo esc_html(GitHub_Helpper::formatViewCount($profile->following)); ?>
                     </strong>
                     <span class="github-pw-text-muted">
                         <?php esc_html_e('Following', 'github-profile-widget'); ?>
@@ -193,7 +193,7 @@ if ( ! defined( 'ABSPATH' ) ) {
                         echo sprintf(
                             /* translators: %s: Number of collaborating organizations */
                             esc_html__('Member of %s Organizations', 'github-profile-widget'),
-                            esc_html(count($orgs))
+                            esc_html(GitHub_Helpper::formatViewCount(count($orgs)))
                         );
                     ?>
                 </div>

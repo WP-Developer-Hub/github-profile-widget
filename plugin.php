@@ -27,6 +27,7 @@ define('GH_PW_PLUGIN_URL', plugin_dir_url(__FILE__));
 define('GH_PW_PLUGIN_BASENAME', plugin_basename(__FILE__));
 
 require_once( 'lib/htmlcompressor.php' );
+require_once( 'lib/github-helpper.php' );
 require_once( 'views/token-settings.php' );
 
 if (!defined('WP_DEBUG') && !WP_DEBUG) {
