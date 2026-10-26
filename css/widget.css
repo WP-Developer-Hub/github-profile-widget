@@ -57,6 +57,11 @@
   display: block !important;
 }
 
+.github-pw-block:not(:last-child) {
+  padding-bottom: 20px !important;
+  border-bottom: 1px solid var(--github-pw-divider-color) !important;
+}
+
 .github-pw-icons-block {
   gap: 5px !important;
   display: flex !important;
@@ -85,7 +90,7 @@
   overflow: hidden !important;
   color: var(--github-pw-text-color) !important;
   background-color: var(--github-pw-bg-color) !important;
-  border: 1px solid var(--github-pw-border-color) !important
+  border: 1px solid var(--github-pw-border-color) !important;
   container: github-pw / inline-size !important;
 }
 
@@ -114,11 +119,8 @@
 }
 
 .github-pw-header {
-  margin: 0 !important;
-  padding: 15px !important;
   font-weight: bold !important;
   background-color: var(--github-pw-header-bg-color) !important;
-  border-bottom: 1px solid var(--github-pw-border-color) !important;
   container: github-pw / inline-size !important;
 }
 
@@ -202,12 +204,9 @@
 
 .github-pw-orgs {
   gap: 5px !important;
-  margin: 0px !important;
-  padding: 15px !important;
   display: grid !important;
   justify-items: center !important;
   background-color: var(--github-pw-header-bg-color) !important;
-  border-top: 1px solid var(--github-pw-border-color) !important;
   grid-template-columns: repeat(auto-fill, minmax(40px, 1fr)) !important;
 }
 
