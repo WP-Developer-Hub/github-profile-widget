@@ -3,7 +3,7 @@
 /**
  * Plugin Name: GitHub Profile Widget
  * Description: This is a plugin that shows your GitHub profile with a simple widget.
- * Version: 4.1.0
+ * Version: 5.0.0
  * Author: Henrique Dias and Luís Soares (Refactors) and DJABHipHop
  * Author URI: https://github.com/WP-Developer-Hub
  * Tested up to: 7.0
