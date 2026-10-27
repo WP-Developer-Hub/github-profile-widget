@@ -24,14 +24,16 @@ define('GH_PW_PLUGIN_ORG', 'WP-Developer-Hub');
 define('GH_PW_PLUGIN_SLUG', 'github-profile-widget');
 define('GH_PW_API_PATH', 'https://api.github.com');
 define('GH_PW_PLUGIN_URL', plugin_dir_url(__FILE__));
+define('GH_PW_PLUGIN_DIR', plugin_dir_path(__FILE__));
 define('GH_PW_PLUGIN_BASENAME', plugin_basename(__FILE__));
+define('GH_PW_PLUGIN_IS_DEBUG_ON', (defined('WP_DEBUG') && WP_DEBUG));
 
-require_once( 'lib/htmlcompressor.php' );
-require_once( 'lib/github-helpper.php' );
-require_once( 'views/token-settings.php' );
+require_once( GH_PW_PLUGIN_DIR . 'lib/htmlcompressor.php' );
+require_once( GH_PW_PLUGIN_DIR . 'lib/github-helpper.php' );
+require_once( GH_PW_PLUGIN_DIR . 'views/token-settings.php' );
 
-if (!defined('WP_DEBUG') && !WP_DEBUG) {
-    require_once( 'lib/github-profile-widget-updates.php' );
+if (defined('GH_PW_PLUGIN_IS_DEBUG_ON') && !GH_PW_PLUGIN_IS_DEBUG_ON) {
+    require_once( GH_PW_PLUGIN_DIR . 'lib/github-profile-widget-updates.php' );
     $api_endpoint = GH_PW_API_PATH . '/repos/' . GH_PW_PLUGIN_ORG . '/' . GH_PW_PLUGIN_SLUG . '/releases/latest';
     new GitHub_Profile_Plugin_Auto_Updates($api_endpoint, GH_PW_PLUGIN_URL, GH_PW_PLUGIN_SLUG, GH_PW_PLUGIN_BASENAME);
 }
