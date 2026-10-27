@@ -237,5 +237,9 @@
   .github-pw-profile-username {
     font-size: 12px !important;
   }
+
+  .github-pw-icons-block-overflow {
+    align-items: flex-start !important;
+  }
 }
 

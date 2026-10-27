@@ -198,7 +198,7 @@ if ( ! defined( 'ABSPATH' ) ) {
                 <?php endif; ?>
 
                 <?php if ( $this->is_checked( $config, 'collaborating_organizations' ) && ! empty( $orgs ) ) : ?>
-                    <div class="github-pw-icons-block">
+                    <div class="github-pw-icons-block github-pw-icons-block-overflow">
                         <i class="octicon octicon-organization-24"></i>
                         <?php
                             echo sprintf(
